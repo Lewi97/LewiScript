@@ -50,6 +50,11 @@ namespace le
 			return _code.size() - 1;
 		}
 
+		auto emit_noop() -> size_t
+		{
+			return emit_and_get_index(Instruction(OpCode::Noop));
+		}
+
 		auto instruction_at(size_t index) -> Instruction& { return _code.at(index); }
 
 		auto last_instruction() -> Instruction&
@@ -95,6 +100,15 @@ namespace le
 		{
 			return _vars.get(name);
 		}
+
+		std::stack<BlockStatement*> _loop_blocks{};
+		struct EscapeReason
+		{
+			BlockStatement* block{}; /* Used to identify blocks */
+			size_t index{}; /* Index of jump instruction */
+			BlockStatement::EscapeReason escape_reason{}; /* Determine what to do */
+		};
+		std::stack<EscapeReason> _escape_calls{};
 
 		auto generate(Statement* statement) -> void
 		{
@@ -223,10 +237,57 @@ namespace le
 				generate(loop_statement.expr.get()); /* expr first */
 				auto post_condition_instr_count = instruction_count();
 				auto pre_condition_jump_index = emit_and_get_index(Instruction(OpCode::JumpIfFalse));
+				const auto our_loop_block = &as<BlockStatement>(loop_statement.body.get());
+				
+				_loop_blocks.push(our_loop_block);
 				generate(loop_statement.body.get());
+				_loop_blocks.pop();
+
 				auto post_block_instruction_count = instruction_count();
+
+				const auto jump_delta_back_to_start = pre_condition_instr_count - post_block_instruction_count;
+
+				/* This is the jump instruction at the start that will exit the loop if expr failed */
 				instruction_at(pre_condition_jump_index).operand.integer = post_block_instruction_count - post_condition_instr_count + 1 /* Jump past the last jump instruction */;
-				emit(Instruction(OpCode::Jump, pre_condition_instr_count - post_block_instruction_count));
+				
+				while (not _escape_calls.empty() and _escape_calls.top().block == our_loop_block)
+				{
+					if (_escape_calls.top().escape_reason & BlockStatement::Break)
+						instruction_at(_escape_calls.top().index).operand.integer = post_block_instruction_count - _escape_calls.top().index + 1 /*Jump over last jump */;
+					else if (_escape_calls.top().escape_reason & BlockStatement::Continue)
+						instruction_at(_escape_calls.top().index).operand.integer = pre_condition_instr_count - _escape_calls.top().index;
+					_escape_calls.pop();
+				}
+
+				emit(Instruction(OpCode::Jump, jump_delta_back_to_start)); /* This jump brings the pc back to start of expr */
+				break;
+			}
+			case SType::ContinueStatement:
+			{
+				if (_loop_blocks.empty())
+					throw(ferr::make_exception("Can't call 'Continue' outside of a loop body"));
+				if (not (_loop_blocks.top()->accepted_escape_reasons & BlockStatement::EscapeReason::Continue))
+					throw(ferr::make_exception("Current body cannot be escaped with 'Continue'"));
+				_escape_calls.push(
+					EscapeReason{
+						.block = _loop_blocks.top(),
+						.index = emit_and_get_index(Instruction(OpCode::Jump)),
+						.escape_reason = BlockStatement::EscapeReason::Continue }
+				);
+				break;
+			}
+			case SType::BreakStatement:
+			{
+				if (_loop_blocks.empty())
+					throw(ferr::make_exception("Can't call 'break' outside of a loop body"));
+				if (not (_loop_blocks.top()->accepted_escape_reasons & BlockStatement::EscapeReason::Break))
+					throw(ferr::make_exception("Current body cannot be escaped with 'break'"));
+				_escape_calls.push(
+					EscapeReason{ 
+						.block = _loop_blocks.top(), 
+						.index = emit_and_get_index(Instruction(OpCode::Jump)),
+						.escape_reason = BlockStatement::EscapeReason::Break}
+				);
 				break;
 			}
 			case SType::AssignmentExpression:
