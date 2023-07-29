@@ -27,7 +27,7 @@ namespace le
 
 	struct Token
 	{
-		enum class Type
+		enum class Type : i64
 		{
 			Null,
 			NumericLiteral,
@@ -79,6 +79,8 @@ namespace le
 		i32 column{};
 	};
 	
+	constexpr auto size__token = sizeof(Token);
+
 #define LE_TOKEN_TYPE_TO_STRING_CASE(type) case Token::Type::type: return #type
 	inline auto to_string(Token::Type type) -> StringView
 	{
