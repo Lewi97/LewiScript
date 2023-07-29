@@ -308,6 +308,16 @@ namespace le
 					evaluate(*_pc);
 				}
 
+#if(LE_TURN_ON_DEBUG_PRINTS)
+				auto& stack_ = stack();
+				auto count = 0ull;
+				while(not stack_.empty())
+				{
+					auto obj = pop();
+					LE_DEBUG_PRINT("{}: {}\n", count++, obj->make_string());
+				}
+#endif
+
 				if (stack().empty())
 				{
 					close_scope();

@@ -6,6 +6,9 @@
 #include <iostream>
 #include <iomanip>
 
+#define LE_TURN_ON_DEBUG_PRINTS 0
+#define LE_DEBUG_PRINT(format_str, ...) std::cout << std::format(format_str, __VA_ARGS__)
+
 namespace le
 {
 	using Exception = std::exception;
@@ -115,6 +118,7 @@ namespace le
 		}
 		return "Unknown";
 	}
+#undef LE_TOKEN_TYPE_TO_STRING_CASE(type) case Token::Type::type: return #type
 
 	inline auto operator<<(std::ostream& out, const Token& token) ->std::ostream&
 	{
