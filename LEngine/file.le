@@ -1,0 +1,9 @@
+var a = "Am i the best?"
+
+if a[0] == "A":
+	a = "Yes i am"
+else:
+	a = "No i am not"
+end
+
+a
