@@ -76,12 +76,12 @@ namespace le
 	*/
 	struct CompiledFunction : RuntimeValue
 	{
-		explicit CompiledFunction(const Frame& frame)
+		explicit CompiledFunction(Frame frame)
 			: function_frame(frame)
 		{ type = Type::Function; }
 
 		
-		const Frame& function_frame;
+		Frame function_frame;
 
 		auto make_string() -> String override 
 		{ 
