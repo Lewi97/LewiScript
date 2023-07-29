@@ -2,6 +2,9 @@
 
 #include "Statements.h"
 #include "ByteCode.h"
+#include "generics.h"
+#include "VarMap.h"
+#include "GlobalState.h"
 
 #include <unordered_map>
 
@@ -15,34 +18,25 @@ namespace le
 	*/
 	class ImplCompiler
 	{
-	public:
-		/* Keeps track of variable name index translation */
-		struct VarMap
-		{
-			using Index = size_t;
-			using Map = std::unordered_map<Symbol, Index>;
-			Index current{};
-			Map map{};
-
-			auto store(const Symbol& str) -> Index
-			{
-				if (has(str))
-					throw(ferr::variable_already_declared(str));
-				return map.insert({ str, current++ }).first->second;
-			}
-			auto get(const Symbol& str) -> Index
-			{
-				if (not has(str))
-					throw(ferr::variable_not_declared(str));
-				return map.at(str);
-			}
-
-			auto has(const Symbol& str) -> bool { return map.find(str) != map.end(); }
-		};
 	protected:
 		Code* _code_obj{};
 		ByteCode _code{};
 		VarMap _vars{};
+		size_t _depth{}; /* Scope depth */
+
+		auto in_global_namespace() const -> bool { return _depth == 0; }
+		auto register_global(Symbol name) -> size_t
+		{
+			return _code_obj->global_names.store(name);
+		}
+		auto is_global(const Symbol& name) const -> bool
+		{
+			return _code_obj->global_names.has(name);
+		}
+		auto get_global(const Symbol& name) const -> size_t
+		{
+			return _code_obj->global_names.get(name);
+		}
 
 		auto instruction_count() const -> i64 { return _code.size(); }
 		auto emit(Instruction instruction) -> void
@@ -57,28 +51,33 @@ namespace le
 		}
 
 		auto instruction_at(size_t index) -> Instruction& { return _code.at(index); }
-		auto function_at(size_t index) -> Frame& { return _code_obj->functions.at(index); }
 
 		auto last_instruction() -> Instruction&
 		{
 			return _code.back();
 		}
 
-		auto store_global(String string) -> size_t
+		template<
+			std::derived_from<RuntimeValue> _Val,
+			typename... _Args>
+		auto store_global(_Args&&... args) -> size_t
+			requires std::constructible_from<_Val, _Args...>
 		{
-			auto old_size = _code_obj->global_strings.size();
-			_code_obj->global_strings.push_back(string);
+			auto old_size = _code_obj->globals.size();
+			_code_obj->globals.push_back(global::mem->emplace<_Val>(std::forward<_Args>(args)...));
 			return old_size;
 		}
 
 		auto store_function(ByteCode code, int argc, String name) -> size_t
 		{
-			auto size = _code_obj->functions.size();
+			auto frame = Frame{};
+
 			if (name.empty())
-				_code_obj->functions.emplace_back(std::move(code), String("Lambda"), argc);
+				frame = Frame(std::move(code), String("Lambda"), argc);
 			else
-				_code_obj->functions.emplace_back(std::move(code), std::move(name), argc);
-			return size;
+				frame = Frame(std::move(code), std::move(name), argc);
+
+			return store_global<CompiledFunction>(frame);
 		}
 
 		template<typename _Type>
@@ -157,23 +156,28 @@ namespace le
 			case SType::FunctionDeclarationExpression:
 			{
 				auto& function_decl = as<FunctionDeclaration>(statement);
-				auto compiler = ImplCompiler();
+				auto compiler = ImplCompiler(_depth + 1ull);
 				
 				for (auto& arg : function_decl.args)
 					compiler.add_local(arg);
-				
-				auto res = compiler.compile(function_decl.body->body, *_code_obj);
 
 				const auto is_lambda = function_decl.name.empty();
-				const auto function_index = store_function(res.first, function_decl.args.size(), String(function_decl.name));
-				
-				emit(Instruction(OpCode::PushFunction, function_index));
+				const auto push_global_index = emit_and_get_index(Instruction(OpCode::PushGlobal));
 
 				if (not is_lambda)
 				{
-					const auto var_index = store(function_decl.name);
-					emit(Instruction(OpCode::Store, var_index));
+					if (in_global_namespace())
+					{
+						emit(Instruction(OpCode::StoreGlobal, register_global(function_decl.name)));
+					}
+					else
+					{
+						emit(Instruction(OpCode::Store, store(function_decl.name)));
+					}
 				}
+				/* Have to first declare globals incase the function body refers to itself (maybe we should compile functions last?) */
+				auto res = compiler.compile(function_decl.body->body, *_code_obj);
+				instruction_at(push_global_index).operand.uinteger = store_function(res.first, function_decl.args.size(), String(function_decl.name));
 
 				break;
 			}
@@ -280,8 +284,15 @@ namespace le
 			case SType::IdentifierExpression:
 			{
 				auto& identifier = as<Identifier>(statement);
-				auto index = _vars.get(identifier.name);
-				emit(Instruction(OpCode::Load, index));
+				if (is_global(identifier.name))
+				{
+					emit(Instruction(OpCode::LoadGlobal, get_global(identifier.name)));
+				}
+				else
+				{
+					emit(Instruction(OpCode::Load, _vars.get(identifier.name)));
+				}
+
 				break;
 			}
 			case SType::NumericLiteralExpression:
@@ -294,8 +305,8 @@ namespace le
 			case SType::StringLiteralExpression:
 			{
 				auto& string = as<StringLiteral>(statement);
-				auto string_global_index = store_global(String(string.string));
-				emit(Instruction(OpCode::PushString, string_global_index));
+				auto string_global_index = store_global<StringValue>(String(string.string));
+				emit(Instruction(OpCode::PushGlobal, string_global_index));
 				break;
 			}
 			case SType::BinaryExpression:
@@ -327,7 +338,9 @@ namespace le
 			}
 		}
 	public:
-		ImplCompiler() = default;
+		explicit ImplCompiler(size_t depth = 0ull)
+			: _depth(depth)
+		{}
 
 		using Result = std::pair<ByteCode, VarMap>;
 
@@ -361,7 +374,6 @@ namespace le
 
 	class Compiler
 	{
-		using VarMap = ImplCompiler::VarMap;
 	public:
 		Compiler() = default;
 
@@ -369,7 +381,7 @@ namespace le
 		try
 		{
 			Code code{};
-			auto compiler = ImplCompiler();
+			auto compiler = ImplCompiler(0ull);
 			auto result = compiler.compile(ast, code);
 			code.code = result.first;
 			return code;
