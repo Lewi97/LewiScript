@@ -138,6 +138,11 @@ namespace le
 				scope().stack = std::stack<LeObject>{};
 				halt(); break;
 			}
+			case OpCode::UnaryOp:
+			{
+				push(pop()->apply_operation(static_cast<Token::Type>(instr.operand.integer)));
+				LE_NEXT_INSTRUCTION;
+			}
 			case OpCode::Call:
 			{
 				auto args_count = _function_args.size();

@@ -53,6 +53,9 @@ namespace le
 		Div,
 		Sub,
 
+		/* Unary */
+		UnaryOp, /* Operand denotes i64 encoded operator type */
+
 		/* Relational */
 		GT,
 		GET,
@@ -82,7 +85,7 @@ namespace le
 			LE_TO_STR(CallFunction); LE_TO_STR(Return); 
 			LE_TO_STR(ReturnExpr); LE_TO_STR(LoadGlobal); 
 			LE_TO_STR(PushGlobal); LE_TO_STR(StoreGlobal);
-			LE_TO_STR(Noop); 
+			LE_TO_STR(Noop); LE_TO_STR(UnaryOp);
 		}
 		return "Unknown opcode";
 	}

@@ -356,6 +356,13 @@ namespace le
 
 				break;
 			}
+			case SType::UnaryOperation:
+			{
+				auto& unary_expr = as<UnaryOperation>(statement);
+				generate(unary_expr.target.get());
+				emit(Instruction(OpCode::UnaryOp, std::to_underlying(unary_expr.op.type)));
+				break;
+			}
 			case SType::NumericLiteralExpression:
 			{
 				auto inst = Instruction{ OpCode::PushReal };
