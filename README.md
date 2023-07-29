@@ -13,13 +13,12 @@ fn add(a, b):
   a + b
 end # blocks have to be closed with the end keyword
 
-fn clamp(n, l, h):
-  if n > h:
-    return h
-  elif n < l:
-    return l
-  end 
-  return n
+# Recursion works
+fn fibo(n):
+	if n > 1: 
+		return fibo(n - 1) + fibo(n - 2) 
+  end
+  return n 
 end
 
 var number = 5
@@ -30,4 +29,8 @@ var array = [number, string, lambda]
 while number > 0:
   number = number - 1
 end
+
+# if number > 5:
+#  var number = 5 # ERROR no ghosting in scopes
+# end
 ```
