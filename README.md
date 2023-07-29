@@ -15,8 +15,8 @@ end # blocks have to be closed with the end keyword
 
 # Recursion works
 fn fibo(n):
-	if n > 1: 
-		return fibo(n - 1) + fibo(n - 2) 
+  if n > 1:
+    return fibo(n - 1) + fibo(n - 2) 
   end
   return n 
 end
