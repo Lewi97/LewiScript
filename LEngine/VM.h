@@ -45,11 +45,12 @@ namespace le
 		
 		std::vector<Scope> _scopes{};
 		
-		Code const* _current_code{ nullptr };
+		Code* _current_code{ nullptr };
 		ProgramCounter _pc{};
 		/* Reusable vector for pushing function args */
 		FunctionArgs _function_args{};
 		LeObject _null_val{};
+		VarStorage _global_storage{};
 
 		/* @return returns previous scope */
 		auto open_scope(ProgramCounter end) -> void
@@ -67,21 +68,26 @@ namespace le
 			_scopes.pop_back();
 		}
 
-		auto get_global_string(size_t index) -> String
+		auto get_global(size_t index) -> LeObject
 		{
-			if (index > _current_code->global_strings.size())
-				throw(ferr::make_exception("Tried accessing out of bounds string global"));
-			return _current_code->global_strings.at(index);
+			if (index > _current_code->globals.size())
+				throw(ferr::make_exception("Tried accessing out of bounds global"));
+			return _current_code->globals.at(index);
 		}
 
 		auto storage() -> VarStorage& { return _scopes.back().variables; }
+		auto global_storage() -> VarStorage& { return _global_storage; }
 		auto scope() -> Scope& { return _scopes.back(); }
 		auto stack() -> Stack& { return _scopes.back().stack; }
 
 		auto load(u64 index) -> LeObject
 		{
-			/* Look through all of them */
 			return storage().load(index);
+		}
+
+		auto load_global(u64 index) -> LeObject
+		{
+			return global_storage().load(index);
 		}
 
 		auto pop() -> LeObject
@@ -144,12 +150,6 @@ namespace le
 
 				LE_NEXT_INSTRUCTION;
 			}
-			case OpCode::PushFunction:
-			{
-				auto& function = _current_code->functions.at(instr.operand.uinteger);
-				push(global::mem->emplace<CompiledFunction>(function));
-				LE_NEXT_INSTRUCTION;
-			}
 			case OpCode::Jump:
 			{
 				LE_JUMP(instr.operand.integer);
@@ -205,14 +205,24 @@ namespace le
 				push(array);
 				LE_NEXT_INSTRUCTION;
 			}
-			case OpCode::PushString:
+			case OpCode::PushGlobal:
 			{
-				push(global::mem->emplace<StringValue>(get_global_string(instr.operand.uinteger)));
+				push(get_global(instr.operand.uinteger));
 				LE_NEXT_INSTRUCTION;
 			}
 			case OpCode::Load:
 			{
 				push(load(instr.operand.uinteger));
+				LE_NEXT_INSTRUCTION;
+			}
+			case OpCode::LoadGlobal:
+			{
+				push(load_global(instr.operand.uinteger));
+				LE_NEXT_INSTRUCTION;
+			}
+			case OpCode::StoreGlobal:
+			{
+				global_storage().store(instr.operand.uinteger, pop());
 				LE_NEXT_INSTRUCTION;
 			}
 			case OpCode::Store:
@@ -282,7 +292,7 @@ namespace le
 			return return_val;
 		}
 
-		auto run(const Code& code) -> std::variant<LeObject, String>
+		auto run(Code& code) -> std::variant<LeObject, String>
 		{
 			_current_code = &code;
 			_pc = _current_code->code.cbegin();
