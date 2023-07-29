@@ -1,6 +1,8 @@
 #pragma once
 
 #include "common.h"
+#include "VarMap.h"
+#include "Builtin.h"
 
 namespace le
 {
@@ -13,7 +15,7 @@ namespace le
 		PushInt, /* UNUSED CURRENTLY */
 		PushReal, /* For pushing number literals */
 		
-		PushGlobal, /* UNUSED */
+		PushGlobal, /* Implements global strings and functions. Operand is index into globals vector in code object */
 		PushString, /* Pushes a string from the globally loaded strings, operand is index */
 		PushFunction, /* Operand denotes index of Frame in functions vector */
 
@@ -21,9 +23,11 @@ namespace le
 
 		/* Store */
 		Store, /* Will store TOS at index of operand */
+		StoreGlobal, /* Will store TOS at index of operand in global vector */
 
 		/* Load */
 		Load, /* Operand is index of variable */
+		LoadGlobal, /* Operand is index into globals vector */
 
 		/* Subscripts */
 		Access, /* Implements 'expr[expr]' Will attempt to access TOS with second to TOS */
@@ -74,9 +78,9 @@ namespace le
 			LE_TO_STR(LET); LE_TO_STR(EQ);
 			LE_TO_STR(NEQ); LE_TO_STR(JumpIfFalse);
 			LE_TO_STR(PushFunction); LE_TO_STR(Call);
-			LE_TO_STR(CallFunction);
-			LE_TO_STR(Return);
-			LE_TO_STR(ReturnExpr);
+			LE_TO_STR(CallFunction); LE_TO_STR(Return); 
+			LE_TO_STR(ReturnExpr); LE_TO_STR(LoadGlobal); 
+			LE_TO_STR(PushGlobal); LE_TO_STR(StoreGlobal);
 		}
 		return "Unknown opcode";
 	}
@@ -148,16 +152,15 @@ namespace le
 	*/
 	struct Code
 	{
-		/* Global string storage */
-		using Strings = std::vector<String>;
-		using Functions = std::vector<Frame>;
-		
-		Functions functions{};
+		using Globals = std::vector<LeObject>;
+
 		ByteCode code{};
-		Strings global_strings{};
+		Globals globals{};
+		/* Allows keeping track of globals */
+		VarMap global_names{};
 	};
 
-	constexpr auto frame__size = sizeof(Code);
+	constexpr auto size__code = sizeof(Code);
 
 	inline auto to_string(const Instruction& i, const Code& code, i64 count = 0) -> String
 	{
@@ -165,17 +168,17 @@ namespace le
 		switch (i.op)
 		{
 			/* Op codes loading an index */
-		case OpCode::Load: case OpCode::Store: case OpCode::MakeArray: case OpCode::Call: case OpCode::CallFunction:
+		case OpCode::Load: case OpCode::Store: case OpCode::MakeArray: 
+		case OpCode::Call: case OpCode::CallFunction: case OpCode::StoreGlobal:
+		case OpCode::LoadGlobal:
 			string += std::to_string(i.operand.uinteger); break;
 			/* Jumps */
 		case OpCode::Jump: case OpCode::JumpIfTrue: case OpCode::JumpIfFalse:
 			string += std::format("{} -> {}", i.operand.integer, count + i.operand.integer); break;
 			/* Push Builtin types */
 		case OpCode::PushReal: string += std::to_string(i.operand.real); break;
-		case OpCode::PushString:
-			string += std::format("{} ({})", i.operand.uinteger, code.global_strings.at(i.operand.uinteger)); break;
-		case OpCode::PushFunction:
-			string += std::format("{} ({})", i.operand.uinteger, code.functions.at(i.operand.uinteger).name); break;
+		case OpCode::PushGlobal: case OpCode::PushString: case OpCode::PushFunction: /* Globals */
+			string += std::format("{} ({})", i.operand.uinteger, code.globals.at(i.operand.uinteger)->make_string()); break;
 		}
 		return string;
 	}
@@ -198,12 +201,6 @@ namespace le
 		return std::format("{}\n", to_string(frame.code, context));
 	}
 
-	inline auto to_string(const Code& code) -> String
-	{
-		auto string = to_string(code.code, code);
-		for (const auto& function : code.functions)
-			string += std::format("\n(Function '{}')\n{}\n", function.name, to_string(function, code));
-		return string;
-	}
+	auto to_string(const Code& code) -> String;
 }
 
