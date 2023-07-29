@@ -41,35 +41,6 @@ auto print_ast(std::string_view source) -> void
     }
 }
 
-/*
-* TODO:
-* member functions for C++ types
-* for loops and accompanying iterators
-* or | and keywords
-* null | true | false literals
-* tuples
-* tuple for loop assignments eg. for key,val in map:
-* add arena's to allocate the pools into
-* custom arena allocator
-* allocate expressions in arena pools too
-* custom classes
-* add operators to classes
-* named arguments
-* var args
-* reference self in lambda, this keyword in general
-* f strings
-* import le scripts
-* TEST:
-* is it faster to also allocate ast nodes into the memory manager
-* is it faster to make type of an object a virtual function, a type erased object in memory or to leave it as is
-* is it faster to use a memory arena that holds all the pools over dynamically allocating all pools
-* is it faster to use a custom allocator that allocates everything into the memory manager for objects like Array that dynamically hold pointers
-* is it faster to use a specialized hash map to identify keywords
-* is it faster to internally change identifiers from string to ints to make variable lookups faster
-* * fix 'add(5,5) add' from properly parsing, 
-    need to enforce a new token of type new line to be expected at any correctly parsed expression|statement 
-*/
-
 auto tree_interpreter_main(int argc, char** argv) -> void
 {
     const auto source =
@@ -93,12 +64,24 @@ print("Hello" + " world!")
     le::run(source, "__main__"); 
 }
 /*
-* TEST:
-* if expr: expr end
-* if expr: expr elif expr: expr else: expr
-* if expr: expr elif expr: expr elif expr: expr else: expr
-* if expr else expr
-* 
+* TODO:
+* Find a better way to handle global objects like scripts and strings.
+* Member functions 
+* for loops and accompanying iterators
+* or | and keywords
+* null | true | false literals
+* tuples
+* tuple for loop assignments eg. for key,val in map:
+* add arena's to allocate the pools into
+* custom arena allocator
+* allocate expressions in arena pools too
+* custom classes
+* add operators to classes
+* named arguments
+* var args
+* reference self in lambda, this keyword in general
+* f strings
+* import keyword
 */
 auto compiler_main(int, char**) -> void
 {
