@@ -8,8 +8,6 @@
 
 namespace le
 {
-	using Symbol = StringView;
-
 	using PStatement = std::unique_ptr<struct Statement>;
 
 	struct Statement

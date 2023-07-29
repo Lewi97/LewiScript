@@ -20,6 +20,7 @@ namespace le
 	using f64 = double;
 	using Number = f64;
 	using hash_t = u64;
+	using Symbol = StringView;
 
 	struct Token
 	{
