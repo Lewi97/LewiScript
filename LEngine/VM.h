@@ -128,6 +128,7 @@ namespace le
 			switch (instr.op)
 			{
 			case OpCode::Halt: halt(); break;
+			case OpCode::Noop: LE_NEXT_INSTRUCTION;
 			case OpCode::ReturnExpr:
 			{ /* By evaluating the expr, its result should be on top */
 				halt(); break;
