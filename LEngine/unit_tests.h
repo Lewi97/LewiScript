@@ -180,6 +180,15 @@ a
 )";
 		LE_UNIT_TEST_END();
 
+		LE_UNIT_TEST_BEGIN(array_member_functions, "[1, 2, 3, 3]")
+			R"(
+	var arr = [1]
+	arr.append(2,3)
+	arr.append(arr.size())
+	arr
+)";
+		LE_UNIT_TEST_END();
+
 	static inline auto _unit_tests = std::vector<void(*)()>
 	{
 		LE_REGISTER_UNIT_TEST(variable_assignment)
@@ -194,6 +203,7 @@ a
 		LE_REGISTER_UNIT_TEST(return_test)
 		LE_REGISTER_UNIT_TEST(nested_while_break_test)
 		LE_REGISTER_UNIT_TEST(fibonacci_test)
+		LE_REGISTER_UNIT_TEST(array_member_functions)
 		//LE_REGISTER_UNIT_TEST(static_var_test)
 	};
 	

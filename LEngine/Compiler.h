@@ -357,13 +357,14 @@ namespace le
 			case SType::MemberExpression:
 			{
 				auto& member_expr = as<MemberExpression>(statement);
-
+				member_access_expr_order_helper(member_expr.target, member_expr.query);
+				emit(Instruction(OpCode::AccessMember));
 				break;
 			}
 			case SType::AccessorExpression:
 			{
 				auto& access_expr = as<AccessorExpression>(statement);
-				member_access_expr_order_helper(access_expr.target, access_expr.query);
+				access_expr_order_helper(access_expr.target, access_expr.query);
 				emit(Instruction(OpCode::Access));
 				break;
 			}
