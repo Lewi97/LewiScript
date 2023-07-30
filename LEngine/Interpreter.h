@@ -172,7 +172,7 @@ namespace le
 				auto imp = static_cast<ImportStatement*>(stmt);
 				if (imp->target.ends_with(".dll"))
 				{
-					auto dllmod = _mem.emplace<DllModule>();
+					auto dllmod = _mem.emplace<DllModule>(String(imp->target));
 					dllmod->load(String(imp->target));
 					imp->target.remove_suffix(4); /* len(".dll") == 4 */
 					_storage.declare(imp->target, dllmod);
