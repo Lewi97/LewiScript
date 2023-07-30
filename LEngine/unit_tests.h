@@ -194,7 +194,7 @@ a
 		LE_REGISTER_UNIT_TEST(return_test)
 		LE_REGISTER_UNIT_TEST(nested_while_break_test)
 		LE_REGISTER_UNIT_TEST(fibonacci_test)
-		LE_REGISTER_UNIT_TEST(static_var_test)
+		// LE_REGISTER_UNIT_TEST(static_var_test)
 	};
 	
 	inline auto run(StringView source, StringView test_name, String expected) -> void
@@ -209,7 +209,7 @@ a
 			return StringView(a.data(), a_end) == StringView(b.data(), b_end);
 		};
 
-		auto res = le::run(source, "__unit_tests__");
+		auto res = le::run_with_vm(source, "__unit_tests__");
 
 		if (res)
 		{

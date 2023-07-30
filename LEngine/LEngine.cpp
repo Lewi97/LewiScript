@@ -59,8 +59,6 @@ print("Hello" + " world!")
 
     //print_ast(source);
 
-    le::unit_test::start();
-
     le::run(source, "__main__"); 
 }
 /*
@@ -82,25 +80,31 @@ print("Hello" + " world!")
 * reference self in lambda, this keyword in general
 * f strings
 * import keyword
+* (maybe) add continue|break as block enders? so if x and y: continue instead of if x and y: continue end
 */
 auto compiler_main(int, char**) -> void
 {
     const auto source =
         R"( 
-fn fibo(n):
-	if n > 1: 
-		return fibo(n - 1) + fibo(n - 2) 
-    end
-	return n 
+var list = [1,2,2,3,2,3]
+var list_size = 6
+var i = 0
+var count = 0
+while i != list_size - 1:
+    i = i + 1
+    if list[i] != 2: continue end
+    count = count + 1
 end
 
-fibo(7)
+count
 )";
 
-    le::print_bytecode(source, "__main__");
-    auto result = le::run_with_vm(source, "__main__");
-    if (result)
-        std::cout << "\n\nResult: " << result->make_string() << '\n';
+    le::unit_test::start();
+
+    //le::print_bytecode(source, "__main__");
+    //auto result = le::run_with_vm(source, "__main__");
+    //if (result)
+    //    std::cout << "\n\nResult: " << result->make_string() << '\n';
 }
 
 int main(int argc, char** argv)
