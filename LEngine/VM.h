@@ -34,7 +34,7 @@ namespace le
 
 	protected:
 		using ProgramCounter = decltype(Code::code)::const_iterator;
-		using Stack = std::stack<LeObject>;
+		using Stack = std::vector<LeObject>;
 		using FunctionArgs = std::vector<LeObject>;
 
 		struct Scope
@@ -93,24 +93,43 @@ namespace le
 
 		auto pop() -> LeObject
 		{
-			auto old = stack().top(); stack().pop();
+			auto old = stack().back(); stack().pop_back();
 			return old;
 		}
 
-		auto push(LeObject object) -> void
+		auto pop_no_ret() -> void
 		{
-			stack().push(object);
+			stack().pop_back();
 		}
 		
+		auto push(LeObject object) -> void
+		{
+			stack().push_back(object);
+		}
+		
+		/* 
+		* Will reverse pop into target container 
+		* This can be done neater
+		*/
+		auto reverse_pop_into_end_of(std::vector<LeObject>& target, u64 n) -> void
+		{
+			auto& s = stack();
+			for (auto i{ s.end() - n }; i != s.end(); i++)
+				target.push_back(*i);
+
+			for (auto i{ 0 }; i < n; i++)
+				pop_no_ret();
+		}
+
 		auto pop(Scope& scope) -> LeObject
 		{
-			auto old = scope.stack.top(); scope.stack.pop();
+			auto old = scope.stack.back(); scope.stack.pop_back();
 			return old;
 		}
 
 		auto push(LeObject object, Scope& scope) -> void
 		{
-			scope.stack.push(object);
+			scope.stack.push_back(object);
 		}
 
 
@@ -142,7 +161,7 @@ namespace le
 			}
 			case OpCode::Return:
 			{ /* Empty return, we clear the stack so we dont return anything */
-				scope().stack = std::stack<LeObject>{};
+				scope().stack.clear();
 				halt(); break;
 			}
 			case OpCode::UnaryOp:
@@ -153,9 +172,8 @@ namespace le
 			case OpCode::Call:
 			{
 				auto args_count = _function_args.size();
-				for (auto i{ 0 }; i < instr.operand.uinteger; i++)
-					_function_args.push_back(pop());
-				
+			
+				reverse_pop_into_end_of(_function_args, instr.operand.uinteger);
 				auto args = std::span(_function_args.begin() + args_count, _function_args.end());
 				auto ret_val = pop()->call(args, *this);
 				push(ret_val);
@@ -312,8 +330,8 @@ namespace le
 			_current_code = &code;
 			_pc = _current_code->code.cbegin();
 
-			try
-			{
+			//try
+			//{
 				auto end = _current_code->code.cend();
 				open_begin_scope(end);
 				while(_pc != end)
@@ -344,11 +362,11 @@ namespace le
 					close_scope();
 					return ret;
 				}
-			}
-			catch (const std::exception& e)
+			//}
+			/*catch (const std::exception& e)
 			{
 				return String(e.what());
-			}
+			}*/
 		}
 	};
 }
