@@ -2,6 +2,7 @@
 
 #include <format>
 #include "common.h"
+#include "Token.h"
 
 namespace le::ferr
 {

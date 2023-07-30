@@ -130,9 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Boolean.cpp" />
-    <ClCompile Include="Builtin.cpp" />
     <ClCompile Include="ByteCode.cpp" />
-    <ClCompile Include="common.cpp" />
     <ClCompile Include="Function.cpp" />
     <ClCompile Include="GlobalState.cpp" />
     <ClCompile Include="LEngine.cpp" />
@@ -167,6 +165,7 @@
     <ClInclude Include="Statements.h" />
     <ClInclude Include="Storage.h" />
     <ClInclude Include="String.h" />
+    <ClInclude Include="Token.h" />
     <ClInclude Include="unit_tests.h" />
     <ClInclude Include="VarMap.h" />
     <ClInclude Include="VM.h" />

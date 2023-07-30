@@ -126,7 +126,7 @@ namespace le
 			while (
 				left and
 				is_operator(_lexer->current()) and
-				precedence(_lexer->current().type) == multiplicative_prec
+				precedence(_lexer->current().type) == precedences::multiplicative
 				)
 			{
 				auto op = _lexer->eat();
@@ -144,7 +144,7 @@ namespace le
 			while (
 				left and
 				is_operator(_lexer->current()) and
-				precedence(_lexer->current().type) == additive_prec
+				precedence(_lexer->current().type) == precedences::additive
 				)
 			{
 				auto op = _lexer->eat();
@@ -162,7 +162,7 @@ namespace le
 			while (
 				left and
 				is_operator(_lexer->current()) and
-				precedence(_lexer->current().type) == relational_prec
+				precedence(_lexer->current().type) == precedences::relational
 				)
 			{
 				auto op = _lexer->eat();
@@ -180,7 +180,7 @@ namespace le
 			while (
 				left and
 				is_operator(_lexer->current()) and
-				precedence(_lexer->current().type) == equality_prec
+				precedence(_lexer->current().type) == precedences::equality
 				)
 			{
 				auto op = _lexer->eat();
@@ -198,7 +198,7 @@ namespace le
 			while (
 				left and
 				is_operator(_lexer->current()) and
-				precedence(_lexer->current().type) == assignment_prec
+				precedence(_lexer->current().type) == precedences::assignment
 				)
 			{
 				/* Skip assig operator for now its always '=' but in the future it could be '+=' '-=' etc... */

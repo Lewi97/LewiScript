@@ -3,6 +3,7 @@
 #include "common.h"
 #include "iter_tools.h"
 #include "format_errs.h"
+#include "Token.h"
 
 namespace le
 {
