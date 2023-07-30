@@ -25,6 +25,8 @@ namespace le
 		size_t _depth{}; /* Scope depth */
 
 		auto in_global_namespace() const -> bool { return _depth == 0; }
+		
+		/* Use this to reserve a variable name as a global */
 		auto register_global(Symbol name) -> size_t
 		{
 			return _code_obj->global_names.store(name);
@@ -62,6 +64,9 @@ namespace le
 			return _code.back();
 		}
 
+		/*
+		* Use this to store an object in the global object array and get an index back
+		*/
 		template<
 			std::derived_from<RuntimeValue> _Val,
 			typename... _Args>
@@ -137,6 +142,38 @@ namespace le
 			/* Generator */
 			switch (statement->type)
 			{
+			case SType::ImportStatement:
+			{
+				auto& import_statement = as<ImportStatement>(statement);
+				auto is_dll = import_statement.target.ends_with(".dll");
+				
+				auto var_name = import_statement.target;
+				if (not import_statement.alias.empty())
+					var_name = import_statement.alias;
+				else if (var_name.ends_with(".dll"))
+				{
+					constexpr auto postfix_size = sizeof(".dll") - 1;
+					const auto str_size = var_name.size() - postfix_size;
+					var_name = var_name.substr(0, str_size);
+				}
+
+				if (is_dll)
+				{
+					auto index = store_global<StringValue>(import_statement.target);
+					emit(Instruction(OpCode::PushGlobal, index));
+					emit(Instruction(OpCode::ImportDll));
+					
+					if (in_global_namespace())
+						emit(Instruction(OpCode::StoreGlobal, register_global(var_name)));
+					else
+						emit(Instruction(OpCode::Store, _vars.store(var_name)));
+				}
+				else
+				{
+					throw(ferr::not_implemented());
+				}
+				break;
+			}
 			case SType::ReturnExpression:
 			{
 				auto& return_expr = as<ReturnExpression>(statement);
