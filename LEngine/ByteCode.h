@@ -11,6 +11,7 @@ namespace le
 		Halt,
 		Pop,
 		Noop, /* Do nothing */
+		ImportDll, /* Expects string to dll at TOS and pushes a dll module to TOS */
 
 		/* Builtin type creation */
 		PushInt, /* UNUSED CURRENTLY */
@@ -86,6 +87,7 @@ namespace le
 			LE_TO_STR(ReturnExpr); LE_TO_STR(LoadGlobal); 
 			LE_TO_STR(PushGlobal); LE_TO_STR(StoreGlobal);
 			LE_TO_STR(Noop); LE_TO_STR(UnaryOp);
+			LE_TO_STR(ImportDll);
 		}
 		return "Unknown opcode";
 	}
