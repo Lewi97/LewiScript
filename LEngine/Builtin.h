@@ -21,12 +21,6 @@ namespace le
 
 		Type type{};
 
-		virtual auto copy() const -> LeObject
-		{
-			throw(ferr::make_exception("This object cannot be copied"));
-			return LeObject{};
-		}
-
 		/* Declared as friend to place it within global namespace and also be able to use the function here */
 		friend inline auto to_string(RuntimeValue::Type type) -> String
 		{
@@ -56,18 +50,6 @@ namespace le
 		virtual auto make_string() -> String
 		{
 			return String("Null");
-		}
-
-		/*
-		* @deprecated THIS OVERLOAD IS ONLY USED BY THE TREE INTERPRETER WHICH IS NO LONGER SUPPORTED
-		* To clarify, the builtin function object does not use this overload, 
-		it is to be used by objects that want an overloaded call operator.
-		* The builtin function object requires the interpreter and storage.
-		*/
-		virtual auto call(std::span<LeObject>& args) -> LeObject
-		{
-			throw(ferr::make_exception("This object cannot be called"));
-			return {};
 		}
 
 		/*
@@ -111,6 +93,15 @@ namespace le
 		virtual auto access_assign(LeObject index, LeObject new_val) -> LeObject
 		{
 			throw(ferr::invalid_access(to_string(type), to_string(index->type)));
+			return LeObject{};
+		}
+
+		/*
+		* expr.expr
+		*/
+		virtual auto member_access(LeObject self, LeObject query) -> LeObject
+		{
+			throw(ferr::invalid_access(to_string(type), to_string(query->type)));
 			return LeObject{};
 		}
 	};
