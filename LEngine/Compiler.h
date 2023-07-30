@@ -211,20 +211,12 @@ namespace le
 					instruction_at(jump_to_next_set).operand.integer = instruction_count() - jump_to_next_set;
 				}
 				/* elif or else case */
-				else if (if_statement.alternative->type == SType::IfStatement)
+				else 
 				{
 					auto jump_to_end = emit_and_get_index(Instruction(OpCode::Jump));
 					auto instr_count = instruction_count();
 					instruction_at(jump_to_next_set).operand.integer = instr_count - jump_to_next_set;
 					generate(if_statement.alternative.get());
-					instruction_at(jump_to_end).operand.integer = instruction_count() - instr_count + 1 /* account for jump instr */;
-				}
-				else if (if_statement.alternative->type == SType::BlockStatement)
-				{
-					auto jump_to_end = emit_and_get_index(Instruction(OpCode::Jump));
-					auto instr_count = instruction_count();
-					generate(if_statement.alternative.get());
-					instruction_at(jump_to_next_set).operand.integer = instruction_count() - jump_to_next_set;
 					instruction_at(jump_to_end).operand.integer = instruction_count() - instr_count + 1 /* account for jump instr */;
 				}
 
