@@ -3,11 +3,7 @@
 #include "common.h"
 #include "format_errs.h"
 
-//#include <variant>
-//#include <cmath>
-#include <vector>
 #include <span>
-//#include <memory>
 
 namespace le
 {
@@ -63,6 +59,7 @@ namespace le
 		}
 
 		/*
+		* @deprecated THIS OVERLOAD IS ONLY USED BY THE TREE INTERPRETER WHICH IS NO LONGER SUPPORTED
 		* To clarify, the builtin function object does not use this overload, 
 		it is to be used by objects that want an overloaded call operator.
 		* The builtin function object requires the interpreter and storage.
