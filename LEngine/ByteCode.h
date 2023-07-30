@@ -34,6 +34,7 @@ namespace le
 		/* Subscripts */
 		Access, /* Implements 'expr[expr]' Will attempt to access TOS with second to TOS */
 		AccessAssign, /* Implements 'expr[expr] = expr' Target TOS, Query second to TOS, RHS third to TOS */
+		AccessMember, /* Implements 'expr.expr' Will attempt to access TOS with second to TOS */
 
 		/* Calling */
 		Call, /* Implements 'expr()' , operand is number of args on stack */
@@ -87,7 +88,7 @@ namespace le
 			LE_TO_STR(ReturnExpr); LE_TO_STR(LoadGlobal); 
 			LE_TO_STR(PushGlobal); LE_TO_STR(StoreGlobal);
 			LE_TO_STR(Noop); LE_TO_STR(UnaryOp);
-			LE_TO_STR(ImportDll);
+			LE_TO_STR(ImportDll); LE_TO_STR(AccessMember);
 		}
 		return "Unknown opcode";
 	}

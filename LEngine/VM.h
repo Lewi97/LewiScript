@@ -222,6 +222,13 @@ namespace le
 				push(target->access(query));
 				LE_NEXT_INSTRUCTION;
 			}
+			case OpCode::AccessMember:
+			{
+				auto target = pop();
+				auto query = pop();
+				push(target->member_access(target, query));
+				LE_NEXT_INSTRUCTION;
+			}
 			case OpCode::MakeArray:
 			{
 				const auto array_size = instr.operand.uinteger;

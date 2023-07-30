@@ -35,6 +35,7 @@ namespace le
 			IdentifierExpression,
 			UnaryOperation, /* Should be unary expression */
 			AccessorExpression,
+			MemberExpression,
 			ArrayExpression,
 			FunctionDeclarationExpression, /* Expr so we can assign it to variables */
 			CallExpression,
@@ -65,9 +66,11 @@ namespace le
 			LE_STATEMENT_TYPE_TO_STRING_CASE(IdentifierExpression);
 			LE_STATEMENT_TYPE_TO_STRING_CASE(NumericLiteralExpression);
 			LE_STATEMENT_TYPE_TO_STRING_CASE(ArrayExpression);
+			LE_STATEMENT_TYPE_TO_STRING_CASE(MemberExpression);
 		}
 		return "Unknown";
 	}
+#undef LE_STATEMENT_TYPE_TO_STRING_CASE
 
 	struct Expression : Statement {};
 	using PExpression = std::unique_ptr<Expression>;
@@ -198,6 +201,14 @@ namespace le
 		PExpression query{};
 	};
 
+	struct MemberExpression : Expression
+	{
+		MemberExpression() { type = Type::MemberExpression; }
+
+		PExpression target{};
+		PExpression query{};
+	};
+
 	inline auto make_accessor_expression(PExpression& target, PExpression& query) -> PExpression
 	{
 		auto accessor = std::make_unique<AccessorExpression>();
@@ -287,7 +298,7 @@ namespace le
 
 	inline auto make_member_expression(PExpression& target, const Token& member) -> PExpression
 	{
-		auto accessor = std::make_unique<AccessorExpression>();
+		auto accessor = std::make_unique<MemberExpression>();
 		accessor->target = std::move(target);
 		accessor->query = make_string_literal(member);
 		return accessor;

@@ -123,6 +123,14 @@ namespace le
 
 			/* Helpers, handy for instructions that rely on stack order */
 
+			/* 'expr.expr' */
+			auto member_access_expr_order_helper =
+				[this](PExpression& target, PExpression& query)
+			{
+				generate(query.get()); /* Set query at second to TOS */
+				generate(target.get()); /* Set target TOS */
+			};
+
 			/* 'expr[expr]' */
 			auto access_expr_order_helper =
 				[this](PExpression& target, PExpression& query)
@@ -346,10 +354,16 @@ namespace le
 
 				break;
 			}
+			case SType::MemberExpression:
+			{
+				auto& member_expr = as<MemberExpression>(statement);
+
+				break;
+			}
 			case SType::AccessorExpression:
 			{
 				auto& access_expr = as<AccessorExpression>(statement);
-				access_expr_order_helper(access_expr.target, access_expr.query);
+				member_access_expr_order_helper(access_expr.target, access_expr.query);
 				emit(Instruction(OpCode::Access));
 				break;
 			}
