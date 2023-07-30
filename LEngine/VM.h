@@ -6,6 +6,7 @@
 #include "Number.h"
 #include "Function.h"
 #include "Array.h"
+#include "DllModule.h"
 
 #include <variant>
 #include <stack>
@@ -129,6 +130,12 @@ namespace le
 			{
 			case OpCode::Halt: halt(); break;
 			case OpCode::Noop: LE_NEXT_INSTRUCTION;
+			case OpCode::ImportDll:
+			{
+				auto dll_name = pop()->make_string();
+				push(global::mem->emplace<DllModule>(StringView(dll_name)));
+				LE_NEXT_INSTRUCTION;
+			}
 			case OpCode::ReturnExpr:
 			{ /* By evaluating the expr, its result should be on top */
 				halt(); break;
@@ -211,19 +218,21 @@ namespace le
 				push(array);
 				LE_NEXT_INSTRUCTION;
 			}
+/* Pushes a global from the Code's global storage aka a string literal or function bytecode */
 			case OpCode::PushGlobal:
 			{
 				push(get_global(instr.operand.uinteger));
 				LE_NEXT_INSTRUCTION;
 			}
-			case OpCode::Load:
-			{
-				push(load(instr.operand.uinteger));
-				LE_NEXT_INSTRUCTION;
-			}
+/* Loads a global variable from the virtual machines global memory, aka a global variable */
 			case OpCode::LoadGlobal:
 			{
 				push(load_global(instr.operand.uinteger));
+				LE_NEXT_INSTRUCTION;
+			}
+			case OpCode::Load:
+			{
+				push(load(instr.operand.uinteger));
 				LE_NEXT_INSTRUCTION;
 			}
 			case OpCode::StoreGlobal:
