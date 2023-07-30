@@ -132,6 +132,7 @@
     <ClCompile Include="Boolean.cpp" />
     <ClCompile Include="Builtin.cpp" />
     <ClCompile Include="ByteCode.cpp" />
+    <ClCompile Include="common.cpp" />
     <ClCompile Include="Function.cpp" />
     <ClCompile Include="GlobalState.cpp" />
     <ClCompile Include="LEngine.cpp" />
