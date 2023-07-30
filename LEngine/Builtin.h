@@ -121,7 +121,7 @@ namespace le
 	* The first param is a pointer to objects with the second being the count.
 	* Do not use this interface outside of C++ to keep integrity of shared ptr's.
 	*/
-	using FFI_FUNC = LeObject(*)(std::span<LeObject>);
+	using FFI_FUNC = LeObject(*)(std::span<LeObject>, struct MemoryManager&);
 
 	struct NullValue : RuntimeValue
 	{

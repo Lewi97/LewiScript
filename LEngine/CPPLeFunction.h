@@ -2,6 +2,7 @@
 
 #include "Builtin.h"
 #include <functional>
+#include "GlobalState.h"
 
 namespace le
 {
@@ -26,7 +27,7 @@ namespace le
         */
         auto call(std::span<LeObject>& args) -> LeObject override
         { 
-            return func(args);
+            return func(args, *global::mem);
         }
     };
 }
