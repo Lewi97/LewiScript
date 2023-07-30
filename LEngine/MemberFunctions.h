@@ -1,6 +1,7 @@
 #pragma once
 
 #include <concepts>
+#include <vector>
 
 #include "Builtin.h"
 

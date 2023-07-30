@@ -4,6 +4,8 @@
 #include "iter_tools.h"
 #include "format_errs.h"
 #include "Token.h"
+#include "Operators.h"
+#include "Keywords.h"
 
 namespace le
 {

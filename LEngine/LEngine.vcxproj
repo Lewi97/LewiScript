@@ -153,12 +153,14 @@
     <ClInclude Include="hashing.h" />
     <ClInclude Include="Interpreter.h" />
     <ClInclude Include="iter_tools.h" />
+    <ClInclude Include="Keywords.h" />
     <ClInclude Include="Lexer.h" />
     <ClInclude Include="le_io.h" />
     <ClInclude Include="MemberFunctions.h" />
     <ClInclude Include="MemoryManager.h" />
     <ClInclude Include="Module.h" />
     <ClInclude Include="Number.h" />
+    <ClInclude Include="Operators.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Repl.h" />
     <ClInclude Include="Runner.h" />

@@ -8,6 +8,7 @@
 #include "format_errs.h"
 #include "Lexer.h"
 #include "Statements.h"
+#include "Operators.h"
 
 namespace le
 {	
