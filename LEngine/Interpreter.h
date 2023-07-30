@@ -28,8 +28,8 @@
 namespace le
 {
 	/*
+	* @deprecate
 	* [DEPRECATED]
-	* 
 	* I will currently no longer be working on this interpreter in favour of the bytecode interpreter found in "VM.h".
 	* As the project gains complexity and features i have found a simple tree interpreter like this lacking in speed and flexibility.
 	* So i will be moving my efforts to the compiler and bytecode interpreter.
@@ -246,7 +246,7 @@ namespace le
 						evaluated_args.emplace_back(evaluate(arg.get()));
 					}
 					auto span = std::span(evaluated_args);
-					call_target->call(span);
+					//call_target->call(span);
 				}
 
 				break;
