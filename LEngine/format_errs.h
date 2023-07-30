@@ -6,6 +6,7 @@
 
 namespace le::ferr
 {
+
 	inline auto make_exception(String message) -> Exception
 	{
 		return Exception(message.c_str());
@@ -14,6 +15,11 @@ namespace le::ferr
 	inline auto make_exception(const char* message) -> Exception
 	{
 		return Exception(message);
+	}
+
+	inline auto invalid_member(String member) -> Exception
+	{
+		return make_exception(std::format("Invalid member '{}'", member));
 	}
 
 	inline auto failed_assignment(String left, String right) -> Exception
