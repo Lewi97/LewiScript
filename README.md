@@ -26,7 +26,7 @@ io.print("Print: ", 5)
 ```
 In C++ the ``print`` function is implemented as follows:
 ```cpp
-auto print(std::span<LeObject> args, MemoryManager& mem) -> LeObject
+extern "C" auto print(std::span<LeObject> args, MemoryManager& mem) -> LeObject
 ```
 
 # Functions
