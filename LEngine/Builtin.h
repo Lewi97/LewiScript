@@ -109,7 +109,7 @@ namespace le
 	using LeObject = RuntimeValue::LeObject;
 	/*
 	* Any imported function is expected to have the following interface.
-	* The first param is a pointer to objects with the second being the count.
+	* The first param is a span of args with the second being a reference to the current memory manager.
 	* Do not use this interface outside of C++ to keep integrity of shared ptr's.
 	*/
 	using FFI_FUNC = LeObject(*)(std::span<LeObject>, struct MemoryManager&);
