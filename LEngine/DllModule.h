@@ -1,7 +1,6 @@
 #pragma once
 
 #include "GlobalState.h"
-#include "Module.h"
 #include "String.h"
 #include "hashing.h"
 #include "CPPLeFunction.h"
@@ -12,21 +11,30 @@
 namespace le
 {
     struct DllModule :
-        public Module
+        public RuntimeValue
     {
-        using Module::Module;
+        explicit DllModule(StringView view)
+        {
+            load(view);
+        }
+
         using Map = std::unordered_map<hash_t, std::shared_ptr<ImportedFunction>>;
 
         HMODULE handle{};
         String mod_name{};
         Map functions{};
 
-        auto load(String module_name) -> LeObject override
+        auto make_string() -> String override
         {
-            handle = LoadLibraryA(module_name.c_str());
+            return std::format("Dll Module '{}'", mod_name);
+        }
+
+        auto load(StringView module_name) -> LeObject
+        {
+            handle = LoadLibraryA(module_name.data());
 
             if (handle == NULL)
-                throw(ferr::make_exception(std::format("Failed to load module '{}'", module_name)));
+                throw(ferr::make_exception(std::format("Failed to load dll module '{}'", module_name)));
 
             mod_name = module_name;
         }
