@@ -83,9 +83,10 @@ namespace le
 	/* import [identifier] */
 	struct ImportStatement : Statement
 	{
-		explicit ImportStatement(Symbol target_) : target(target_) { type = Type::ImportStatement; }
+		explicit ImportStatement(Symbol target_ = "") : target(target_) { type = Type::ImportStatement; }
 
 		Symbol target{};
+		Symbol alias{}; /* Can be null */
 	};
 
 	/* Execute body while 'expr' evaluates to true */

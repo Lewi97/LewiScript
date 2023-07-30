@@ -4,7 +4,7 @@
 
 namespace le
 {
-	#define LE_SCRIPT_RESERVED_KEYWORD_LIST "var", "fn", "end", "if", "elif", "else", "while", "import"
+	#define LE_SCRIPT_RESERVED_KEYWORD_LIST "var", "fn", "end", "if", "elif", "else", "while", "import", "as"
 
 	inline auto to_keyword(const StringView& view) -> Token::Type
 	{
@@ -30,8 +30,8 @@ namespace le
 			return Token::Type::KeywordContinue;
 		if (view == "return")
 			return Token::Type::KeywordReturn;
-		/*if (view == "class")
-			return Token::Type::KeywordImport;*/
+		if (view == "as")
+			return Token::Type::KeywordAs;
 		return Token::Type::Null;
 	}
 }

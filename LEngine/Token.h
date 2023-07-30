@@ -37,6 +37,7 @@ namespace le
 			KeywordBreak,
 			KeywordContinue,
 			KeywordReturn,
+			KeywordAs,
 
 			/* Operators */
 			OperatorEquals,

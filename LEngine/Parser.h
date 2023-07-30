@@ -445,9 +445,17 @@ namespace le
 					return std::make_unique<ReturnExpression>();
 				return std::make_unique<ReturnExpression>(parse_assignment_expr());
 			case Token::Type::KeywordImport: 
+			{
 				_lexer->advance(); /* Skip keyword */
+				auto import_statement = std::make_unique<ImportStatement>();
+				expect(Token::Type::StringLiteral);
+				import_statement->target = _lexer->eat().raw;
+				expect(Token::Type::KeywordAs);
+				_lexer->advance(); /* Skip keyword as */
 				expect(Token::Type::Identifier);
-				return std::make_unique<ImportStatement>(_lexer->eat().raw);
+				import_statement->alias = _lexer->eat().raw;
+				return import_statement;
+			}
 			default: /* No statement, try expression */
 				return parse_assignment_expr();
 			}
