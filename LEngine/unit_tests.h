@@ -45,7 +45,7 @@ a
 )";
 		LE_UNIT_TEST_END();
 
-		LE_UNIT_TEST_BEGIN(if_statements_consequent, "No i am not")
+		LE_UNIT_TEST_BEGIN(if_statements_alternative, "No i am not")
 			R"(
 	var a = "Am i the best?"
 	if a[0] != "A":
@@ -185,7 +185,7 @@ a
 		LE_REGISTER_UNIT_TEST(variable_assignment)
 		LE_REGISTER_UNIT_TEST(relational_operators)
 		LE_REGISTER_UNIT_TEST(if_statements)
-		LE_REGISTER_UNIT_TEST(if_statements_consequent)
+		LE_REGISTER_UNIT_TEST(if_statements_alternative)
 		LE_REGISTER_UNIT_TEST(if_statements_elif)
 		LE_REGISTER_UNIT_TEST(nested_if_statements)
 		LE_REGISTER_UNIT_TEST(while_loop)
@@ -194,7 +194,7 @@ a
 		LE_REGISTER_UNIT_TEST(return_test)
 		LE_REGISTER_UNIT_TEST(nested_while_break_test)
 		LE_REGISTER_UNIT_TEST(fibonacci_test)
-		// LE_REGISTER_UNIT_TEST(static_var_test)
+		LE_REGISTER_UNIT_TEST(static_var_test)
 	};
 	
 	inline auto run(StringView source, StringView test_name, String expected) -> void
@@ -209,8 +209,9 @@ a
 			return StringView(a.data(), a_end) == StringView(b.data(), b_end);
 		};
 
+		// le::print_bytecode(source, "__unit_tests__");
 		auto res = le::run_with_vm(source, "__unit_tests__");
-
+		
 		if (res)
 		{
 			if (cmp_till_null(res->make_string(), expected))
@@ -226,7 +227,7 @@ a
 		{
 			std::cout << "[FAILED] got nullptr ";
 		}
-
+		
 		std::cout << " at test '" << test_name << "'\n";
 	}
 
