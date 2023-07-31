@@ -164,8 +164,14 @@ namespace le
 
 		ByteCode code{};
 		Globals globals{};
-		/* Allows keeping track of globals */
+	};
+
+	struct CompilerContext
+	{
+		/* Global variable names*/
 		VarMap global_names{};
+		/* Strings, check if we arent adding any duplicates */
+		VarMap global_strings{};
 	};
 
 	constexpr auto size__code = sizeof(Code);
