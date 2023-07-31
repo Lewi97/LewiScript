@@ -16,6 +16,7 @@ namespace le
         explicit DllModule(StringView view)
         {
             load(view);
+            type = Type::Module;
         }
 
         using Map = std::unordered_map<hash_t, std::shared_ptr<ImportedFunction>>;
@@ -39,7 +40,7 @@ namespace le
             mod_name = module_name;
         }
 
-        auto access(LeObject index) -> LeObject override
+        auto member_access(LeObject self, LeObject index) -> LeObject override
         {
             if (index->type != Type::String)
                 throw(ferr::make_exception(std::format("Cannot access member of dll module with {}", to_string(index->type))));
