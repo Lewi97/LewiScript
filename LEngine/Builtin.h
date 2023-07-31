@@ -16,7 +16,7 @@ namespace le
 		*/
 		enum class Type
 		{
-			Null, NumericLiteral, Variable, String, Function, Boolean, Module, Custom
+			Null, NumericLiteral, Variable, String, Function, Boolean, Module, Iterator, Custom
 		};
 
 		Type type{};
@@ -104,6 +104,12 @@ namespace le
 		virtual auto member_access(LeObject self, LeObject query) -> LeObject
 		{
 			throw(ferr::invalid_access(to_string(type), to_string(query->type)));
+			return LeObject{};
+		}
+
+		virtual auto iterator(LeObject self) -> LeObject
+		{
+			throw(ferr::make_exception(std::format("{} does not have an iterator", to_string(type))));
 			return LeObject{};
 		}
 	};

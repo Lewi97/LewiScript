@@ -152,6 +152,7 @@
     <ClInclude Include="GlobalState.h" />
     <ClInclude Include="hashing.h" />
     <ClInclude Include="Interpreter.h" />
+    <ClInclude Include="Iterator.h" />
     <ClInclude Include="iter_tools.h" />
     <ClInclude Include="Keywords.h" />
     <ClInclude Include="Lexer.h" />

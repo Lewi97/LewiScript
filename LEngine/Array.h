@@ -5,13 +5,17 @@
 #include "Number.h"
 #include "String.h"
 #include "MemberFunctions.h"
+#include "Iterator.h"
 
 #include <vector>
 
 namespace le
 {
+
 	struct Array : RuntimeValue
 	{
+		friend auto array_iterator_next(Array& arr, size_t& context) -> LeObject;
+		
 		Array() = default;
 		explicit Array(u64 size)
 		{
@@ -82,6 +86,20 @@ namespace le
 		{
 			auto idx = to_numeric_index(*index);
 			return (at(idx) = rhs);
+		}
+
+		auto iterator(LeObject self) -> LeObject override
+		{
+			auto iterator_next_func = 
+				[count = 0ull](Array& arr) mutable -> LeObject
+			{
+				if (count < arr.data.size())
+				{
+					return arr.data.at(count++);
+				}
+				return nullptr;
+			};
+			return global::mem->emplace<Iterator<Array, decltype(iterator_next_func)>>(self, iterator_next_func);
 		}
 	};
 

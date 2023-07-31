@@ -122,9 +122,6 @@
     <ClInclude Include="CPPLeFunction.h">
       <Filter>Header Files\builtin</Filter>
     </ClInclude>
-    <ClInclude Include="MemberFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Compiler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -151,6 +148,12 @@
     </ClInclude>
     <ClInclude Include="Keywords.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Iterator.h">
+      <Filter>Header Files\builtin</Filter>
+    </ClInclude>
+    <ClInclude Include="MemberFunctions.h">
+      <Filter>Header Files\builtin</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
