@@ -46,6 +46,20 @@ fn func():
 end
 ```
 
+# Loops
+The language currently supports for and while loops, where for loops require a custom iterator type.
+```
+fn count(list, n):
+  var found = 0
+  for i in list:
+    if i == n:
+      found = found + 1
+    end 
+  end
+  return found
+end
+```
+
 # Line endings
 While languages like Python parse expressions till a new line occurs. Here i wanted to experiment with a lack of line endings. 
 ```
