@@ -37,6 +37,7 @@ namespace le
     template<typename _Code>
     inline auto evaluate(detail::Evaluator<_Code> auto& runner, _Code& ast) -> std::optional<LeObject>
     {
+        std::cout << "\n[RUNTIME OUTPUT]\n";
         auto output = runner.run(ast);
         if (std::holds_alternative<String>(output))
         {
