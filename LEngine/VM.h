@@ -210,6 +210,11 @@ namespace le
 			case OpCode::ForLoop:
 			{
 				auto empty_span = std::span<LeObject>{};
+
+				/* Look for the iterator, this is a somewhat bad and naive solution but will work for now */
+				while (tos()->type != RuntimeValue::Type::Iterator)
+					pop();
+
 				/* Iterators call next on their call operator */
 				auto iter_res = tos()->call(empty_span, *this);
 				if (iter_res)
