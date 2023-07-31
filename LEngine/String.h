@@ -4,6 +4,7 @@
 #include "format_errs.h"
 #include "Number.h"
 #include "Boolean.h"
+#include "Iterator.h"
 
 /*
 * Builtin string type, uses std::string for its implementation.
@@ -109,6 +110,19 @@ namespace le
 			}
 
 			return {};
+		}
+
+		auto iterator(LeObject self) -> LeObject override
+		{
+			auto iterator_next =
+				[count = 0ull](StringValue& self) mutable -> LeObject
+			{
+				if (count < self.string.size())
+					return self._make_small_string(count++);
+				return nullptr;
+			};
+
+			return global::mem->emplace<Iterator<StringValue, decltype(iterator_next)>>(self, iterator_next);
 		}
 	};
 
