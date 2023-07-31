@@ -32,14 +32,14 @@ extern "C" auto print(std::span<LeObject> args, MemoryManager& mem) -> LeObject
 # Functions
 ```
 # inherently all functions are also lambda's
+# This declaration places the function func within the global namespace
 fn func():
   return 5
 end
-# is 'almost' equal to
+# This one does not, it assigns a lambda to a variable
 var func = fn(): return 5 end
-# the first fn declaration places the 'func' identifier in the global namespace so it can be reached by other functions
 
-# functions can be declared within functions, however those will not be declared in the global namespace
+# Functions can be declared within functions, however those will not be declared in the global namespace so besides syntax there is no difference between it and a lambda
 fn func():
   fn func2(): return 5 end
   return func2
