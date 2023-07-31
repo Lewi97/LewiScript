@@ -69,26 +69,8 @@ namespace le
 
 		auto access_assign(LeObject index, LeObject rhs) -> LeObject override
 		{
-			auto idx = to_numeric_index(*index);
-
-			if (rhs->type != Type::String)
-			{
-				throw(ferr::failed_assignment("String slice", to_string(rhs->type)));
-			}
-
-			auto str = static_cast<StringValue*>(rhs.get());
-			if (str->string.size() != 1)
-			{
-				throw(ferr::make_exception("Can only assign strings of size one to string index"));
-			}
-
-			if (bounds_check(idx))
-			{
-				string.at(idx) = str->string.front();
-			}
-
-			/* If out of bounds, _make_small_string will throw */
-			return _make_small_string(idx);
+			throw(ferr::make_exception("Contents of string are immutable"));
+			return LeObject{};
 		}
 
 		auto to_native_bool() const -> bool override
@@ -129,5 +111,7 @@ namespace le
 			return {};
 		}
 	};
+
+	constexpr auto size__string = sizeof(StringValue);
 }
 
