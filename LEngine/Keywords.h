@@ -32,6 +32,10 @@ namespace le
 			return Token::Type::KeywordReturn;
 		if (view == "as")
 			return Token::Type::KeywordAs;
+		if (view == "for")
+			return Token::Type::KeywordFor;
+		if (view == "in")
+			return Token::Type::OperatorIn;
 		return Token::Type::Null;
 	}
 }

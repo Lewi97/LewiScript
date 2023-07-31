@@ -38,6 +38,7 @@ namespace le
 			KeywordContinue,
 			KeywordReturn,
 			KeywordAs,
+			KeywordFor,
 
 			/* Operators */
 			OperatorEquals,
@@ -52,6 +53,9 @@ namespace le
 			OperatorEq, /* == */
 			OperatorNEq, /* != */
 			OperatorNot, /* ! */
+
+			/* Named operators */
+			OperatorIn,
 		};
 
 		Type type{};
