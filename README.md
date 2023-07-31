@@ -47,13 +47,20 @@ end
 ```
 
 # Line endings
-While in languages in Python expressions end at a new line or C++ where they end at a ';' token. Here i wanted to experiment with a lack of line endings. 
+While languages like Python parse expressions till a new line occurs. Here i wanted to experiment with a lack of line endings. 
 ```
 # No endings means this is valid
 var a = 5 var b = 6 var c = 7
 
-var add_5 = fn(x): x + 5 end
-# But also means this will cause unforeseen logic
-a = 5 - # Should throw an error but won't 
-add_5(b)
+# This does mean issues can occur, here for example the unary '-' operator will be parsed as a binary operation between 5 and x
+fn func(x):
+  x = x + 5
+  -x
+end
+
+# This can be fixed very simply by using an explicit return
+fn func(x):
+  x = x + 5
+  return -x
+end
 ```
