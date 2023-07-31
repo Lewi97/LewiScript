@@ -37,7 +37,7 @@ fn func():
 end
 # is 'almost' equal to
 var func = fn(): return 5 end
-# the 'fn' keyword places the 'func' identifier in the global namespace so it can be reached by other functions
+# the first fn declaration places the 'func' identifier in the global namespace so it can be reached by other functions
 
 # functions can be declared within functions, however those will not be declared in the global namespace
 fn func():
