@@ -29,6 +29,8 @@ namespace le
 		}
 
 		auto has(const Symbol& str) -> bool { return map.find(str) != map.end(); }
+
+		auto index_at(const Symbol& str) -> Index& { return map.at(str); }
 	};
 }
 
