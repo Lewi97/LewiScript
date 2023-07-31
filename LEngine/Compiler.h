@@ -19,9 +19,10 @@ namespace le
 	class ImplCompiler
 	{
 	protected:
-		Code* _code_obj{};
-		ByteCode _code{};
 		VarMap _vars{};
+		ByteCode _code{};
+		Code* _code_obj{};
+		CompilerContext& _context;
 		size_t _depth{}; /* Scope depth */
 
 		auto in_global_namespace() const -> bool { return _depth == 0; }
@@ -29,15 +30,15 @@ namespace le
 		/* Use this to reserve a variable name as a global */
 		auto register_global(Symbol name) -> size_t
 		{
-			return _code_obj->global_names.store(name);
+			return _context.global_names.store(name);
 		}
 		auto is_global(const Symbol& name) const -> bool
 		{
-			return _code_obj->global_names.has(name);
+			return _context.global_names.has(name);
 		}
 		auto get_global(const Symbol& name) const -> size_t
 		{
-			return _code_obj->global_names.get(name);
+			return _context.global_names.get(name);
 		}
 
 		auto instruction_count() const -> i64 { return _code.size(); }
@@ -76,6 +77,16 @@ namespace le
 			auto old_size = _code_obj->globals.size();
 			_code_obj->globals.push_back(global::mem->emplace<_Val>(std::forward<_Args>(args)...));
 			return old_size;
+		}
+
+		/* @return index of string in global array */
+		auto store_string(const StringView& string) -> size_t
+		{
+			if (_context.global_strings.has(string))
+				return _context.global_strings.get(string);
+			_context.global_strings.store(string); /* Register it */
+			_context.global_strings.index_at(string) = store_global<StringValue>(string); /* Make an entry in the global vector to store it */
+			return _context.global_strings.get(string); /* Return the global index */
 		}
 
 		auto store_function(ByteCode code, int argc, String name) -> size_t
@@ -167,7 +178,7 @@ namespace le
 
 				if (is_dll)
 				{
-					auto index = store_global<StringValue>(import_statement.target);
+					auto index = store_string(import_statement.target);
 					emit(Instruction(OpCode::PushGlobal, index));
 					emit(Instruction(OpCode::ImportDll));
 					
@@ -215,7 +226,7 @@ namespace le
 			case SType::FunctionDeclarationExpression:
 			{
 				auto& function_decl = as<FunctionDeclaration>(statement);
-				auto compiler = ImplCompiler(_depth + 1ull);
+				auto compiler = ImplCompiler(_context, _depth + 1ull);
 				
 				for (auto& arg : function_decl.args)
 					compiler.add_local(arg);
@@ -417,7 +428,7 @@ namespace le
 			case SType::StringLiteralExpression:
 			{
 				auto& string = as<StringLiteral>(statement);
-				auto string_global_index = store_global<StringValue>(String(string.string));
+				auto string_global_index = store_string(string.string);
 				emit(Instruction(OpCode::PushGlobal, string_global_index));
 				break;
 			}
@@ -450,8 +461,9 @@ namespace le
 			}
 		}
 	public:
-		explicit ImplCompiler(size_t depth = 0ull)
+		explicit ImplCompiler(CompilerContext& context, size_t depth = 0ull)
 			: _depth(depth)
+			, _context(context)
 		{}
 
 		using Result = std::pair<ByteCode, VarMap>;
@@ -492,8 +504,9 @@ namespace le
 		auto emit_bytecode(AST& ast) -> std::variant<Code, String>
 		try
 		{
-			Code code{};
-			auto compiler = ImplCompiler(0ull);
+			auto code = Code{};
+			auto context = CompilerContext{};
+			auto compiler = ImplCompiler(context, 0ull);
 			auto result = compiler.compile(ast, code);
 			code.code = result.first;
 			return code;
