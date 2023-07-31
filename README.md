@@ -5,29 +5,55 @@ The hardest part about making a scripting language is coming up with a clever na
 I was wondering if it would be hard to make a scripting language that natively integrates C++. Of course i could use Lua or Python's ``ctypes`` but i wanted to try my own hand at it. And boy has that hand been burned a lot already.
 
 # Native types
-
 ```
 # there are currently only 4 native types
-# there are plans for more: modules, proper bool type, maps, etc
+# there are plans for more: proper bool type, maps, etc
 var number = 5 
 var string = "Hello!" 
 var lambda = fn(n): n * 2 end
 var array = [number, string, lambda]
 ```
 
+# Native C++ support (somewhat)
+```
+# Dll's can be loaded in using the import keyword but are required to be aliased
+import "LibIO.dll" as io
+
+# Functions within the dll can be accessed with a member expression
+# Internally it calls GetProcAddress and will throw if the function was not found
+# Make sure to use 'extern "C"' to avoid name mangling
+io.print("Print: ", 5)
+```
+In C++ the ``print`` function is implemented as follows:
+```cpp
+extern "C" auto print(std::span<LeObject> args, MemoryManager& mem) -> LeObject
+```
+
 # Functions
 ```
 # inherently all functions are also lambda's
+# This declaration places the function func within the global namespace
 fn func():
   return 5
 end
-# is 'almost' equal to
+# This one does not, it assigns a lambda to a variable
 var func = fn(): return 5 end
-# the 'fn' keyword places the 'func' identifier in the global namespace so it can be reached by other functions
 
-# functions can be declared within functions, however those will not be declared in the global namespace
+# Functions can be declared within functions, however those will not be declared in the global namespace so besides syntax there is no difference between it and a lambda
 fn func():
   fn func2(): return 5 end
   return func2
 end
+```
+
+# Line endings
+While in languages in Python expressions end at a new line or C++ where they end at a ';' token. Here i wanted to experiment with a lack of line endings. 
+```
+# No endings means this is valid
+var a = 5 var b = 6 var c = 7
+
+var add_5 = fn(x): x + 5 end
+# But also means this will cause unforeseen logic
+a = 5 - # Should throw an error but won't 
+add_5(b)
 ```
