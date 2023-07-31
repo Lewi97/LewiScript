@@ -97,6 +97,11 @@ namespace le
 			return old;
 		}
 
+		auto tos() -> LeObject&
+		{
+			return stack().back();
+		}
+
 		auto pop_no_ret() -> void
 		{
 			stack().pop_back();
@@ -194,6 +199,28 @@ namespace le
 				else
 				{
 					LE_NEXT_INSTRUCTION;
+				}
+			}
+			case OpCode::GetIter:
+			{
+				auto target = pop();
+				push(target->iterator(target));
+				LE_NEXT_INSTRUCTION;
+			}
+			case OpCode::ForLoop:
+			{
+				auto empty_span = std::span<LeObject>{};
+				/* Iterators call next on their call operator */
+				auto iter_res = tos()->call(empty_span, *this);
+				if (iter_res)
+				{
+					push(iter_res);
+					LE_NEXT_INSTRUCTION;
+				}
+				else
+				{
+					pop(); /* Remove iterator from stack */
+					LE_JUMP(instr.operand.integer);
 				}
 			}
 			case OpCode::JumpIfTrue:

@@ -27,6 +27,7 @@ namespace le
 
 			/* Loops */
 			WhileLoop,
+			ForLoop,
 
 			/* Expressions */
 			BinaryExpression,
@@ -90,6 +91,16 @@ namespace le
 
 		Symbol target{};
 		Symbol alias{}; /* Can be null */
+	};
+
+	/* Execute while iter does not return null */
+	struct ForLoop : Statement
+	{
+		ForLoop() { type = Type::ForLoop; }
+
+		Symbol var{}; /* for 'var' in 'target' */
+		PExpression target{};
+		PStatement body{};
 	};
 
 	/* Execute body while 'expr' evaluates to true */

@@ -278,6 +278,21 @@ namespace le
 
 				break;
 			}
+			case SType::ForLoop:
+			{
+				auto& loop = as<ForLoop>(statement);
+				generate(loop.target.get());
+				emit(Instruction(OpCode::GetIter));
+				auto loop_opcode_index = emit_and_get_index(Instruction(OpCode::ForLoop));
+				auto loop_var_index = store(loop.var);
+				emit(Instruction(OpCode::Store, loop_var_index));
+				generate(loop.body.get());
+
+				const auto instr_count_post_loop = instruction_count();
+				emit(Instruction(OpCode::Jump, loop_opcode_index - instr_count_post_loop));
+				instruction_at(loop_opcode_index).operand.integer = instr_count_post_loop - loop_opcode_index + 1 /* jump instruction */;
+				break;
+			}
 			case SType::WhileLoop:
 			{
 				auto& loop_statement = as<WhileLoop>(statement);
@@ -293,8 +308,6 @@ namespace le
 
 				auto post_block_instruction_count = instruction_count();
 
-				const auto jump_delta_back_to_start = pre_condition_instr_count - post_block_instruction_count;
-
 				/* This is the jump instruction at the start that will exit the loop if expr failed */
 				instruction_at(pre_condition_jump_index).operand.integer = post_block_instruction_count - post_condition_instr_count + 1 /* Jump past the last jump instruction */;
 				
@@ -307,7 +320,7 @@ namespace le
 					_escape_calls.pop();
 				}
 
-				emit(Instruction(OpCode::Jump, jump_delta_back_to_start)); /* This jump brings the pc back to start of expr */
+				emit(Instruction(OpCode::Jump, pre_condition_instr_count - post_block_instruction_count)); /* This jump brings the pc back to start of expr */
 				break;
 			}
 			case SType::ContinueStatement:

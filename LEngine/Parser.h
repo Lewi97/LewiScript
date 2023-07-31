@@ -420,10 +420,27 @@ namespace le
 			return while_loop;
 		}
 
+		auto parse_for_loop() -> PStatement
+		{
+			auto loop = std::make_unique<ForLoop>();
+			expect(Token::Type::Identifier);
+			loop->var = _lexer->eat().raw;
+			expect(Token::Type::OperatorIn);
+			_lexer->advance();
+			loop->target = parse_primary_expr();
+			expect(Token::Type::Colon);
+			_lexer->advance();
+			loop->body = parse_block_statement();
+			return loop;
+		}
+
 		auto parse_statement() -> PStatement
 		{
 			switch (_lexer->current().type)
 			{
+			case Token::Type::KeywordFor:
+				_lexer->advance(); /* Skip for keyword */
+				return parse_for_loop();
 			case Token::Type::KeywordWhile:
 				_lexer->advance(); /* Skip while keyword */
 				return parse_while_loop();

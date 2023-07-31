@@ -23,6 +23,10 @@ namespace le
 
 		MakeArray, /* Operand denotes amount of values */
 
+		/* For loop and iterators */
+		GetIter, /* calls TOS->iterator(self) */
+		ForLoop, /* increment iterator on TOS and jump delta of operand if TOS->function_next() returns nullptr */
+
 		/* Store */
 		Store, /* Will store TOS at index of operand */
 		StoreGlobal, /* Will store TOS at index of operand in global vector */
@@ -89,6 +93,7 @@ namespace le
 			LE_TO_STR(PushGlobal); LE_TO_STR(StoreGlobal);
 			LE_TO_STR(Noop); LE_TO_STR(UnaryOp);
 			LE_TO_STR(ImportDll); LE_TO_STR(AccessMember);
+			LE_TO_STR(GetIter); LE_TO_STR(ForLoop);
 		}
 		return "Unknown opcode";
 	}
@@ -187,7 +192,7 @@ namespace le
 		case OpCode::LoadGlobal:
 			string += std::to_string(i.operand.uinteger); break;
 			/* Jumps */
-		case OpCode::Jump: case OpCode::JumpIfTrue: case OpCode::JumpIfFalse:
+		case OpCode::Jump: case OpCode::JumpIfTrue: case OpCode::JumpIfFalse: case OpCode::ForLoop:
 			string += std::format("{} -> {}", i.operand.integer, count + i.operand.integer); break;
 			/* Push Builtin types */
 		case OpCode::PushReal: string += std::to_string(i.operand.real); break;

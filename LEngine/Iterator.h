@@ -25,13 +25,11 @@ namespace le
 	struct Iterator
 		: RuntimeValue
 	{
-		using Owner = std::shared_ptr<_Owner>;
-
-		Iterator(Owner owner_, _Function func) 
+		Iterator(LeObject owner_, _Function func) 
 			: owner(owner_), function_next(func)
 		{ type = Type::Iterator; }
 
-		Owner owner{};
+		LeObject owner{};
 		_Function function_next{};
 		auto member_access(LeObject self, LeObject query) -> LeObject override
 		{
@@ -41,13 +39,18 @@ namespace le
 			if (str == "next")
 			{
 				return 
-					MemberFunction<This>(self, [](This& iter, std::span<LeObject>&, struct VirtualMachine&)
+					global::mem->emplace<MemberFunction<This>>(self, [](This& iter, std::span<LeObject>&, struct VirtualMachine&)
 					{
-						return iter.function_next(*iter.owner);
+						return iter.function_next(*static_cast<_Owner*>(iter.owner.get()));
 					});
 			}
 			throw(ferr::invalid_member(str));
 			return LeObject{};
+		}
+
+		auto call(std::span<LeObject>&, class VirtualMachine&) -> LeObject override
+		{
+			return function_next(*static_cast<_Owner*>(owner.get()));
 		}
 	};
 

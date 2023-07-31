@@ -120,7 +120,7 @@ namespace le
 	* The first param is a span of args with the second being a reference to the current memory manager.
 	* Do not use this interface outside of C++ to keep integrity of shared ptr's.
 	*/
-	using FFI_FUNC = LeObject(*)(std::span<LeObject>, struct MemoryManager&);
+	using FFI_FUNC = LeObject(*)(std::span<LeObject>, class MemoryManager&);
 
 	struct NullValue : RuntimeValue
 	{
