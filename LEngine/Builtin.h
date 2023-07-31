@@ -79,7 +79,7 @@ namespace le
 		}
 		
 		/*
-		* expr[expr]
+		* Implements: expr[expr]
 		*/
 		virtual auto access(LeObject index) -> LeObject
 		{
@@ -88,7 +88,7 @@ namespace le
 		}
 
 		/*
-		* expr[expr] = expr
+		* Implements: expr[expr] = expr AND expr.identifier = expr
 		*/
 		virtual auto access_assign(LeObject index, LeObject new_val) -> LeObject
 		{
@@ -97,7 +97,9 @@ namespace le
 		}
 
 		/*
-		* expr.expr
+		* Implements: expr.identifier
+		* @param self: A shared pointer to self, this is handy for returning memberfunctions
+		* @param query: is guarenteed to always be a string unlike LeObject::access(expr)
 		*/
 		virtual auto member_access(LeObject self, LeObject query) -> LeObject
 		{
