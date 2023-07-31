@@ -99,11 +99,12 @@ namespace le
 		/*
 		* Implements: expr.identifier
 		* @param self: A shared pointer to self, this is handy for returning memberfunctions
-		* @param query: is guarenteed to always be a string unlike LeObject::access(expr)
+		* @param member: is guarenteed to always be a string unlike LeObject::access(expr)
+		* We are passing member as a const ref stringview because microsoft does not like optimizing stringview calls
 		*/
-		virtual auto member_access(LeObject self, LeObject query) -> LeObject
+		virtual auto member_access(LeObject self, const String& member) -> LeObject
 		{
-			throw(ferr::invalid_access(to_string(type), to_string(query->type)));
+			throw(ferr::invalid_member(String(member)));
 			return LeObject{};
 		}
 

@@ -49,10 +49,9 @@ namespace le
 			return at(idx);
 		}
 
-		auto member_access(LeObject self, LeObject query) -> LeObject
+		auto member_access(LeObject self, const String& member) -> LeObject override
 		{
-			auto& str = static_cast<StringValue*>(query.get())->string;
-			if (str == "append")
+			if (member == "append")
 			{
 				return global::mem->emplace<MemberFunction<Array>>(self,
 					[](Array& self, std::span<LeObject>& args, struct VirtualMachine&)->LeObject
@@ -62,7 +61,7 @@ namespace le
 					}
 				);
 			}
-			if (str == "size")
+			if (member == "size")
 			{
 				return global::mem->emplace<MemberFunction<Array>>(self,
 					[](Array& self, std::span<LeObject>& args, struct VirtualMachine&)->LeObject
@@ -71,7 +70,7 @@ namespace le
 					}
 				);
 			}
-			throw(ferr::invalid_member(str));
+			throw(ferr::invalid_member(String(member)));
 		}
 
 		auto at(size_t idx) -> LeObject&

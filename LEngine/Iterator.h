@@ -31,12 +31,11 @@ namespace le
 
 		LeObject owner{};
 		_Function function_next{};
-		auto member_access(LeObject self, LeObject query) -> LeObject override
+		auto member_access(LeObject self, const String& member) -> LeObject override
 		{
 			using This = std::remove_reference_t<decltype(*this)>;
 
-			auto& str = static_cast<StringValue*>(query.get())->string;
-			if (str == "next")
+			if (member == "next")
 			{
 				return 
 					global::mem->emplace<MemberFunction<This>>(self, [](This& iter, std::span<LeObject>&, struct VirtualMachine&)
@@ -44,7 +43,7 @@ namespace le
 						return iter.function_next(*static_cast<_Owner*>(iter.owner.get()));
 					});
 			}
-			throw(ferr::invalid_member(str));
+			throw(ferr::invalid_member(member));
 			return LeObject{};
 		}
 

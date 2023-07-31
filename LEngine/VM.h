@@ -258,7 +258,7 @@ namespace le
 			{
 				auto target = pop();
 				auto query = pop();
-				push(target->member_access(target, query));
+				push(target->member_access(target, static_cast<StringValue*>(query.get())->string));
 				LE_NEXT_INSTRUCTION;
 			}
 			case OpCode::MakeArray:

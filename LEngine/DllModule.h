@@ -30,7 +30,7 @@ namespace le
             return std::format("Dll Module '{}'", mod_name);
         }
 
-        auto load(StringView module_name) -> LeObject
+        auto load(StringView module_name) -> void
         {
             handle = LoadLibraryA(module_name.data());
 
@@ -40,20 +40,17 @@ namespace le
             mod_name = module_name;
         }
 
-        auto member_access(LeObject self, LeObject index) -> LeObject override
+        auto member_access(LeObject self, const String& member) -> LeObject override
         {
-            if (index->type != Type::String)
-                throw(ferr::make_exception(std::format("Cannot access member of dll module with {}", to_string(index->type))));
-            auto& f_name = static_cast<StringValue*>(index.get())->string;
-            auto hash = hashing::Hasher::hash(f_name);
+            auto hash = hashing::Hasher::hash(member);
             if (auto itr = functions.find(hash); itr != functions.end())
             {
                 return itr->second;
             }
 
-            auto f = GetProcAddress(handle, f_name.c_str());
+            auto f = GetProcAddress(handle, member.data());
             if (f == NULL)
-                throw(ferr::make_exception(std::format("Failed to '{}' from module '{}'", f_name, mod_name)));
+                throw(ferr::make_exception(std::format("Failed to '{}' from module '{}'", member, mod_name)));
 
             return functions[hash] = global::mem->emplace<ImportedFunction>(reinterpret_cast<FFI_FUNC>(f));
         }
