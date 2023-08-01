@@ -86,9 +86,10 @@ namespace le::ferr
 	inline auto unexpected_token(Token::Type expected, const Token& got) -> Exception
 	{
 		return make_exception(
-			std::format("Expected {} got {} at line {} column {}"
+			std::format("Expected token {} got ({}: {}) at line {} column {}"
 			, to_string(expected)
 			, to_string(got.type)
+			, got.raw
 			, got.line
 			, got.column)
 			);
