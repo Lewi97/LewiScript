@@ -312,6 +312,11 @@ namespace le
 				push(global::mem->emplace<NumberValue>(instr.operand.real));
 				LE_NEXT_INSTRUCTION;
 			}
+			case OpCode::PushNull:
+			{
+				push(_null_val);
+				LE_NEXT_INSTRUCTION;
+			}
 			/* Operators */
 			/* Arithmetic */
 			case OpCode::Add: case OpCode::Mul: 
