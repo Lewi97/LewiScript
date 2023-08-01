@@ -56,7 +56,7 @@ namespace le
 			OperatorNot, /* ! */
 
 			/* Named operators */
-			OperatorIn,
+			OperatorIn, /* Currently only implemented for for loops not as actual operator */
 		};
 
 		Type type{};
