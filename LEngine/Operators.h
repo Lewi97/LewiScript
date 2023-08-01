@@ -24,7 +24,6 @@ namespace le
 			case '!': return Token::Type::OperatorNot;
 			case '>': return Token::Type::OperatorGT;
 			case '<': return Token::Type::OperatorLT;
-			case ':': return Token::Type::Colon; /* The lexer will try and place this as a walrus operator so we just recognize it here */
 			}
 		}
 		else if (view.size() == 2)

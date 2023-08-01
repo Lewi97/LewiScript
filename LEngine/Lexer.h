@@ -128,7 +128,8 @@ namespace le
 						});
 					token.type = to_operator(token.raw);
 				}
-				else
+				/* If nothing else maybe it is one of these tokens */
+				if (token.type == Token::Type::Null)
 				{
 					/* Single characters */
 					switch (c)
@@ -158,7 +159,7 @@ namespace le
 						token.type = Token::Type::Dot;
 						token.raw = StringView(itr, itr + 1); itr++; break;
 					default: /* unrecognized */
-						itr++; advance_column();
+						throw(ferr::unrecognized_character(c));
 					}
 				}
 
