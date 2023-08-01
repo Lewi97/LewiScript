@@ -3,6 +3,7 @@
 #include "Builtin.h"
 #include <functional>
 #include "GlobalState.h"
+#include "RuntimeStrings.h"
 
 namespace le
 {
@@ -24,6 +25,11 @@ namespace le
 
         FFI_FUNC func{};
         String name{};
+
+        auto type_name() -> LeObject override
+        {
+            return strings::make_string("ImportedFunction");
+        }
 
         auto make_string() -> String override
         {

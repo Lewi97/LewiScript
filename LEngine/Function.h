@@ -3,6 +3,7 @@
 #include "common.h"
 #include "Builtin.h"
 #include "String.h"
+#include "RuntimeStrings.h"
 #include "ByteCode.h"
 
 #include <unordered_map>
@@ -82,6 +83,11 @@ namespace le
 
 		
 		Frame function_frame;
+
+		auto type_name() -> LeObject override
+		{
+			return strings::make_string("Function");
+		}
 
 		auto make_string() -> String override 
 		{ 

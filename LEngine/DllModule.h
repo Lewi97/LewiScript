@@ -4,6 +4,7 @@
 #include "String.h"
 #include "hashing.h"
 #include "CPPLeFunction.h"
+#include "RuntimeStrings.h"
 
 #include <unordered_map>
 #include <Windows.h>
@@ -24,6 +25,11 @@ namespace le
         HMODULE handle{};
         String mod_name{};
         Map functions{};
+
+        auto type_name() -> LeObject override
+        {
+            return strings::make_string("DllModule");
+        }
 
         auto make_string() -> String override
         {

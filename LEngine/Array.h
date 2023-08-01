@@ -3,7 +3,6 @@
 #include "common.h"
 #include "Builtin.h"
 #include "Number.h"
-#include "String.h"
 #include "MemberFunctions.h"
 #include "Iterator.h"
 
@@ -14,7 +13,6 @@ namespace le
 
 	struct Array : RuntimeValue
 	{
-		friend auto array_iterator_next(Array& arr, size_t& context) -> LeObject;
 		
 		Array() = default;
 		explicit Array(u64 size)
@@ -23,6 +21,11 @@ namespace le
 		}
 
 		std::vector<LeObject> data{};
+
+		auto type_name() -> LeObject override
+		{
+			return strings::make_string("Array");
+		}
 
 		auto make_string() -> String override
 		{

@@ -52,6 +52,11 @@ namespace le
 			return String("Null");
 		}
 
+		virtual auto type_name() -> LeObject
+		{
+			throw(ferr::make_exception("Type has not implemented name"));
+		}
+
 		/*
 		* Overload used by bytecode compiled functions
 		*/

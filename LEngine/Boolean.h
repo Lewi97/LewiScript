@@ -2,6 +2,7 @@
 
 #include "GlobalState.h"
 #include "Builtin.h"
+#include "RuntimeStrings.h"
 
 namespace le
 {
@@ -11,6 +12,11 @@ namespace le
 		bool val{ false };
 
 		explicit Boolean(bool v) : val(v) { type = Type::Boolean; }
+
+		auto type_name() -> LeObject override
+		{
+			return strings::make_string("Boolean");
+		}
 
 		auto make_string() -> String override
 		{

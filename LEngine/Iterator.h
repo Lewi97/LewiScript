@@ -2,7 +2,7 @@
 
 #include "Builtin.h"
 #include <concepts>
-#include "String.h"
+#include "RuntimeStrings.h"
 #include "MemberFunctions.h"
 
 namespace le
@@ -31,6 +31,12 @@ namespace le
 
 		LeObject owner{};
 		_Function function_next{};
+		
+		auto type_name() -> LeObject override
+		{
+			return strings::make_string("Iterator");
+		}
+
 		auto member_access(LeObject self, const String& member) -> LeObject override
 		{
 			using This = std::remove_reference_t<decltype(*this)>;

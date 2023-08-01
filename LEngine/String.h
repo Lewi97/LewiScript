@@ -42,6 +42,11 @@ namespace le
 			return string;
 		}
 
+		auto type_name() -> LeObject override
+		{
+			return strings::make_string("String");
+		}
+
 		auto bounds_check(size_t idx) const -> bool { return idx < string.size(); }
 
 		auto access(LeObject index) -> LeObject override

@@ -3,6 +3,7 @@
 #include <concepts>
 
 #include "Builtin.h"
+#include "RuntimeStrings.h"
 
 namespace le
 {
@@ -20,6 +21,11 @@ namespace le
         auto call(std::span<LeObject>& args, class VirtualMachine& vm) -> LeObject override
         {
             return _function(*static_cast<_This*>(_this.get()), args, vm);
+        }
+
+        auto type_name() -> LeObject override
+        {
+            return strings::make_string("MemberFunction");
         }
     private:
         LeObject _this{};

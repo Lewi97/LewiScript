@@ -17,6 +17,11 @@ namespace le::ferr
 		return Exception(message);
 	}
 
+	inline auto too_many_arguments(size_t args, size_t expected, String callable_name) -> Exception
+	{
+		return make_exception(std::format("Called {} with {} arguments expected {}", callable_name, args, expected));
+	}
+
 	inline auto invalid_member(String member) -> Exception
 	{
 		return make_exception(std::format("Invalid member '{}'", member));
