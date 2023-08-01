@@ -17,3 +17,8 @@ auto le::make::make_null() -> LeObject
 {
     return global::null;
 }
+
+auto le::make::make_bool(bool b) -> LeObject
+{
+    return global::mem->emplace<Boolean>(b);
+}
