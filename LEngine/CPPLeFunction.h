@@ -26,9 +26,9 @@ namespace le
         FFI_FUNC func{};
         String name{};
 
-        auto type_name() -> LeObject override
+        auto type_name() -> String override
         {
-            return strings::make_string("ImportedFunction");
+            return "ImportedFunction";
         }
 
         auto make_string() -> String override

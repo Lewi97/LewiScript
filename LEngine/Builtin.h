@@ -52,9 +52,9 @@ namespace le
 			return String("Null");
 		}
 
-		virtual auto type_name() -> LeObject
+		virtual auto type_name() -> String
 		{
-			throw(ferr::make_exception("Type has not implemented name"));
+			return "RuntimeValue";
 		}
 
 		/*
@@ -127,18 +127,5 @@ namespace le
 	* Do not use this interface outside of C++ to keep integrity of shared ptr's.
 	*/
 	using FFI_FUNC = LeObject(*)(std::span<LeObject>, class MemoryManager&);
-
-	struct NullValue : RuntimeValue
-	{
-		NullValue()
-		{
-			type = Type::Null;
-		}
-
-		auto make_string() -> String override
-		{
-			return String("Null");
-		}
-	};
 }
 

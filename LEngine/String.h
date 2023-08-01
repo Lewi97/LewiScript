@@ -42,9 +42,9 @@ namespace le
 			return string;
 		}
 
-		auto type_name() -> LeObject override
+		auto type_name() -> String override
 		{
-			return strings::make_string("String");
+			return "String";
 		}
 
 		auto bounds_check(size_t idx) const -> bool { return idx < string.size(); }

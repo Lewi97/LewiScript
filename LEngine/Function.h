@@ -84,9 +84,9 @@ namespace le
 		
 		Frame function_frame;
 
-		auto type_name() -> LeObject override
+		auto type_name() -> String override
 		{
-			return strings::make_string("Function");
+			return "Function";
 		}
 
 		auto make_string() -> String override 

@@ -2,7 +2,6 @@
 
 #include "Builtin.h"
 #include <concepts>
-#include "RuntimeStrings.h"
 #include "MemberFunctions.h"
 
 namespace le
@@ -32,9 +31,9 @@ namespace le
 		LeObject owner{};
 		_Function function_next{};
 		
-		auto type_name() -> LeObject override
+		auto type_name() -> String override
 		{
-			return strings::make_string("Iterator");
+			return "Iterator";
 		}
 
 		auto member_access(LeObject self, const String& member) -> LeObject override

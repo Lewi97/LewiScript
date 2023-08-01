@@ -26,9 +26,9 @@ namespace le
         String mod_name{};
         Map functions{};
 
-        auto type_name() -> LeObject override
+        auto type_name() -> String override
         {
-            return strings::make_string("DllModule");
+            return "DllModule";
         }
 
         auto make_string() -> String override

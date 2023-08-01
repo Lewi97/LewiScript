@@ -22,9 +22,9 @@ namespace le
 
 		std::vector<LeObject> data{};
 
-		auto type_name() -> LeObject override
+		auto type_name() -> String override
 		{
-			return strings::make_string("Array");
+			return "Array";
 		}
 
 		auto make_string() -> String override

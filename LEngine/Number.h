@@ -4,7 +4,6 @@
 #include "Builtin.h"
 #include "Boolean.h"
 #include "format_errs.h"
-#include "RuntimeStrings.h"
 
 #include <charconv>
 
@@ -15,9 +14,9 @@ namespace le
 		explicit NumberValue(Number n = Number{}) : number(n) { type = Type::NumericLiteral; }
 		Number number{};
 
-		auto type_name() -> LeObject override
+		auto type_name() -> String override
 		{
-			return strings::make_string("Number");
+			return "Number";
 		}
 
 		auto make_string() -> String override
