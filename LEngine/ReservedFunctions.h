@@ -45,7 +45,7 @@ namespace le::lib::reserved
 	inline auto get_string(std::span<LeObject> args, MemoryManager& mem) -> LeObject
 	{
 		if (args.size() != 1)
-			throw(ferr::too_many_arguments(args.size(), 1, "iterator"));
+			throw(ferr::too_many_arguments(args.size(), 1, "String"));
 
 		return make::make_string(args.front()->make_string());
 	}
@@ -57,10 +57,12 @@ namespace le::lib::reserved
 
 		switch (hash)
 		{
+			/* Functions */
 		case hashing::Hasher::hash("print"):
-		case hashing::Hasher::hash("iterator"):
 		case hashing::Hasher::hash("type"):
-		case hashing::Hasher::hash("string"):
+			/* Types */
+		case hashing::Hasher::hash("Iterator"):
+		case hashing::Hasher::hash("String"):
 		case hashing::Hasher::hash("Range"):
 			return true;
 		default:
@@ -79,9 +81,9 @@ namespace le::lib::reserved
 		case hashing::Hasher::hash("type"):
 			return global::mem->emplace<ImportedFunction>(get_type, "type");
 		case hashing::Hasher::hash("iterator"):
-			return global::mem->emplace<ImportedFunction>(get_iterator, "iterator");
+			return global::mem->emplace<ImportedFunction>(get_iterator, "Iterator");
 		case hashing::Hasher::hash("string"):
-			return global::mem->emplace<ImportedFunction>(get_string, "string");
+			return global::mem->emplace<ImportedFunction>(get_string, "String");
 		case hashing::Hasher::hash("Range"):
 			return global::mem->emplace<ImportedFunction>(range_constructor, "Range");
 		//case hashing::Hasher::hash("range"):
