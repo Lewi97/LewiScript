@@ -202,10 +202,12 @@ namespace le
 				precedence(_lexer->current().type) == precedences::assignment
 				)
 			{
-				/* Skip assig operator for now its always '=' but in the future it could be '+=' '-=' etc... */
-				_lexer->advance(); 
+				auto op = _lexer->eat().type;
 				auto right = parse_assignment_expr();
-				left = make_assignment_expression(left, right);
+				if (op == Token::Type::OperatorWalrus)
+					left = make_assignment<AssignmentExpression>(left, right);
+				else
+					left = make_assignment<AssignmentStatement>(left, right);
 			}
 
 			return left;

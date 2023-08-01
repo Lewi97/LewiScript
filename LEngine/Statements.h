@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common.h"
+#include "generics.h"
 
 #include <vector>
 #include <charconv>
@@ -22,7 +23,8 @@ namespace le
 			BreakStatement,
 			ContinueStatement,
 
-			VarAssignmentStatement,
+			VarAssignmentStatement, /* var a = 1 */
+			AssignmentStatement, /* a = 1 */
 			BlockStatement,
 
 			/* Loops */
@@ -40,7 +42,7 @@ namespace le
 			ArrayExpression,
 			FunctionDeclarationExpression, /* Expr so we can assign it to variables */
 			CallExpression,
-			AssignmentExpression,
+			AssignmentExpression, /* a := 1 */
 			ReturnExpression
 		};
 
@@ -63,11 +65,13 @@ namespace le
 			LE_STATEMENT_TYPE_TO_STRING_CASE(AccessorExpression);
 			LE_STATEMENT_TYPE_TO_STRING_CASE(StringLiteralExpression);
 			LE_STATEMENT_TYPE_TO_STRING_CASE(VarAssignmentStatement);
+			LE_STATEMENT_TYPE_TO_STRING_CASE(AssignmentStatement);
 			LE_STATEMENT_TYPE_TO_STRING_CASE(BinaryExpression);
 			LE_STATEMENT_TYPE_TO_STRING_CASE(IdentifierExpression);
 			LE_STATEMENT_TYPE_TO_STRING_CASE(NumericLiteralExpression);
 			LE_STATEMENT_TYPE_TO_STRING_CASE(ArrayExpression);
 			LE_STATEMENT_TYPE_TO_STRING_CASE(MemberExpression);
+			LE_STATEMENT_TYPE_TO_STRING_CASE(UnaryOperation);
 		}
 		return "Unknown";
 	}
@@ -76,9 +80,19 @@ namespace le
 	struct Expression : Statement {};
 	using PExpression = std::unique_ptr<Expression>;
 
+	/* a := 10 */
 	struct AssignmentExpression : Expression
 	{
 		AssignmentExpression() { type = Type::AssignmentExpression; }
+
+		PExpression target{}; /* Access, identifier, member expressions */
+		PExpression right{};
+	};
+
+	/* a = 10 */
+	struct AssignmentStatement : Expression
+	{
+		AssignmentStatement() { type = Type::AssignmentStatement; }
 
 		PExpression target{}; /* Access, identifier, member expressions */
 		PExpression right{};
@@ -246,9 +260,11 @@ namespace le
 		return binop;
 	}
 
-	inline auto make_assignment_expression(PExpression& target, PExpression& right) -> PExpression
+	template<typename _Expr>
+	inline auto make_assignment(PExpression& target, PExpression& right) -> PExpression
+		requires any_of<_Expr, AssignmentExpression, AssignmentStatement>
 	{
-		auto expr = std::make_unique<AssignmentExpression>();
+		auto expr = std::make_unique<_Expr>();
 		expr->target = std::move(target);
 		expr->right = std::move(right);
 		return expr;
