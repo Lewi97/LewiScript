@@ -95,6 +95,7 @@ namespace le
 			LE_TO_STR(Noop); LE_TO_STR(UnaryOp);
 			LE_TO_STR(ImportDll); LE_TO_STR(AccessMember);
 			LE_TO_STR(GetIter); LE_TO_STR(ForLoop);
+			LE_TO_STR(DupTos);
 		}
 		return "Unknown opcode";
 	}
