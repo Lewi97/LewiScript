@@ -9,9 +9,13 @@ I was wondering if it would be hard to make a scripting language that natively i
 # there are currently only 4 native types
 # there are plans for more: proper bool type, maps, etc
 var number = 5 
-var string = "Hello!" 
+var string = "number = " + String(number) 
 var lambda = fn(n): n * 2 end
 var array = [number, string, lambda]
+var range = Range(0, 2, 1)
+var iterator = Iterator(range)
+var member_function = array.size
+import "some.dll" as module
 ```
 
 # Native C++ support (somewhat)
@@ -27,6 +31,19 @@ io.print("Print: ", 5)
 In C++ the ``print`` function is implemented as follows:
 ```cpp
 extern "C" auto print(std::span<LeObject> args, MemoryManager& mem) -> LeObject
+```
+
+# Loops
+The language currently supports for and while loops, where for loops require a custom iterator type.
+```
+for i in Range(0, 10, 2):
+  print(i)
+end
+
+var iter = Iterator(Range(0, 10, 2))
+while iter:
+  print(iter.next())
+end
 ```
 
 # Functions
@@ -46,18 +63,16 @@ fn func():
 end
 ```
 
-# Loops
-The language currently supports for and while loops, where for loops require a custom iterator type.
+# Builtin functions
 ```
-fn count(list, n):
-  var found = 0
-  for i in list:
-    if i == n:
-      found = found + 1
-    end 
-  end
-  return found
-end
+type      # Implements Type->type_name()
+print     # Prints arguments through to cout
+String    # Implements Type->make_string() can also be seen as string constructor
+Iterator  # Implements Type->iterator()
+Range     # Range type constructor
+
+# Fun fact: u can use them all at once in a single expression
+print(String(type(Iterator(Range(1)))))
 ```
 
 # Line endings
