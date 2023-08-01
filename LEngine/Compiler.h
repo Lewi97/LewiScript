@@ -5,6 +5,7 @@
 #include "generics.h"
 #include "VarMap.h"
 #include "GlobalState.h"
+#include "ReservedFunctions.h"
 
 #include <unordered_map>
 
@@ -76,6 +77,13 @@ namespace le
 		{
 			auto old_size = _code_obj->globals.size();
 			_code_obj->globals.push_back(global::mem->emplace<_Val>(std::forward<_Args>(args)...));
+			return old_size;
+		}
+
+		auto store_global(LeObject object) -> size_t
+		{
+			auto old_size = _code_obj->globals.size();
+			_code_obj->globals.push_back(object);
 			return old_size;
 		}
 
@@ -413,8 +421,17 @@ namespace le
 			case SType::IdentifierExpression:
 			{
 				auto& identifier = as<Identifier>(statement);
+
 				if (is_global(identifier.name))
 				{
+					emit(Instruction(OpCode::LoadGlobal, get_global(identifier.name)));
+				}
+				else if (lib::reserved::is_reserved(identifier.name))
+				{
+					/* First time loading this global, so save it as global variable */
+					emit(Instruction(OpCode::PushGlobal, store_global(lib::reserved::get(identifier.name))));
+					emit(Instruction(OpCode::StoreGlobal, register_global(identifier.name)));
+
 					emit(Instruction(OpCode::LoadGlobal, get_global(identifier.name)));
 				}
 				else
