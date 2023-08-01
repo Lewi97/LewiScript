@@ -36,7 +36,7 @@ namespace le::ferr
 	{
 		return make_exception(
 			std::format("Failed to assign {} to {}"
-				, left, right)
+				, right, left)
 		);
 	}
 	
