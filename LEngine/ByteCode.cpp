@@ -22,7 +22,7 @@ namespace le
 				string += std::format("String('{}')\n", global->make_string());
 				break;
 			default:
-				string += "Unknown global type";
+				string += std::format("(Type: '{}')", global->make_string());
 			}
 		}
 		return string;
