@@ -105,7 +105,7 @@ namespace le
 		}
 		return "Unknown";
 	}
-#undef LE_TO_STRING(type) case Token::Type::type: return #type
+#undef LE_TO_STRING(type)
 
 	inline auto operator<<(std::ostream& out, const Token& token)->std::ostream&
 	{
