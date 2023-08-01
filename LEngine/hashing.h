@@ -12,7 +12,7 @@ namespace le::hashing
 		template<
 			typename _String,
 			typename _Val = _String::value_type>
-		auto operator()(const _String& str) const -> _Out
+		constexpr auto operator()(const _String& str) const -> _Out
 			requires(std::ranges::range<_String> and std::same_as<char, _Val>)
 		{
 			return hash(str);
@@ -21,7 +21,7 @@ namespace le::hashing
 		template<
 			typename _String,
 			typename _Val = _String::value_type>
-		static auto hash(const _String& str) -> _Out
+		static constexpr auto hash(const _String& str) -> _Out
 		{
 			auto hash = _Hash;
 			for (auto c : str)
@@ -30,6 +30,12 @@ namespace le::hashing
 				hash *= _Prime;
 			}
 			return hash;
+		}
+
+		template <size_t N>
+		static constexpr auto hash(const char(&string)[N]) -> size_t
+		{
+			return hash(std::string_view(string));
 		}
 	};
 
