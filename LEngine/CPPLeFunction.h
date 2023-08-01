@@ -25,7 +25,7 @@ namespace le
         /*
         * func is assumed to be not null
         */
-        auto call(std::span<LeObject>& args, struct VirtualMachine&) -> LeObject override
+        auto call(std::span<LeObject>& args, class VirtualMachine&) -> LeObject override
         { 
             return func(args, *global::mem);
         }
