@@ -14,7 +14,7 @@ namespace le
 
 		auto type_name() -> String override
 		{
-			return 
+			return "Null";
 		}
 
 		auto make_string() -> String override
