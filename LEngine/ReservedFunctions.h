@@ -41,6 +41,14 @@ namespace le::lib::reserved
 		return args.front()->iterator(args.front());
 	}
 
+	inline auto get_string(std::span<LeObject> args, MemoryManager& mem) -> LeObject
+	{
+		if (args.size() != 1)
+			throw(ferr::too_many_arguments(args.size(), 1, "iterator"));
+
+		return strings::make_string(args.front()->make_string());
+	}
+
 	/* Is a specific symbol reserved */
 	inline auto is_reserved(Symbol symbol) -> bool
 	{
@@ -51,6 +59,7 @@ namespace le::lib::reserved
 		case hashing::Hasher::hash("print"):
 		case hashing::Hasher::hash("iterator"):
 		case hashing::Hasher::hash("type"):
+		case hashing::Hasher::hash("string"):
 			return true;
 		default:
 			return false;
@@ -69,6 +78,8 @@ namespace le::lib::reserved
 			return global::mem->emplace<ImportedFunction>(get_type, "type");
 		case hashing::Hasher::hash("iterator"):
 			return global::mem->emplace<ImportedFunction>(get_iterator, "iterator");
+		case hashing::Hasher::hash("string"):
+			return global::mem->emplace<ImportedFunction>(get_string, "string");
 		//case hashing::Hasher::hash("range"):
 		default:
 			throw(ferr::make_exception("Tried accessing non existent global"));
