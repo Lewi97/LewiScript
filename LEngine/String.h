@@ -119,7 +119,7 @@ namespace le
 			{
 				if (count < self.string.size())
 					return self._make_small_string(count++);
-				return nullptr;
+				return global::null;
 			};
 
 			return global::mem->emplace<Iterator<StringValue, decltype(iterator_next)>>(self, iterator_next);

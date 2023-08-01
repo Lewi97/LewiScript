@@ -96,7 +96,7 @@ namespace le
 				{
 					return arr.data.at(count++);
 				}
-				return nullptr;
+				return global::null;
 			};
 			return global::mem->emplace<Iterator<Array, decltype(iterator_next_func)>>(self, iterator_next_func);
 		}

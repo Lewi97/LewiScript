@@ -217,7 +217,7 @@ namespace le
 
 				/* Iterators call next on their call operator */
 				auto iter_res = tos()->call(empty_span, *this);
-				if (iter_res)
+				if (iter_res->type != RuntimeValue::Type::Null)
 				{
 					push(iter_res);
 					LE_NEXT_INSTRUCTION;
@@ -330,7 +330,7 @@ namespace le
 	public:
 		VirtualMachine()
 		{
-			_null_val = global::mem->emplace<NullValue>();
+			_null_val = global::null;
 		}
 
 		auto run(const Frame& frame, std::span<LeObject>& args) -> LeObject

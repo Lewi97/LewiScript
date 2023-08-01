@@ -374,7 +374,7 @@ namespace le
 			}
 
 			if (not val)
-				val = _mem.emplace<NullValue>();
+				val = global::null;
 
 			return val;
 		}
