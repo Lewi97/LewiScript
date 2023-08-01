@@ -5,7 +5,8 @@
 #include "Builtin.h"
 #include "CPPLeFunction.h"
 #include "hashing.h"
-#include "RuntimeStrings.h"
+#include "TypeFactory.h"
+#include "Range.h"
 #include "Null.h"
 
 /*
@@ -30,7 +31,7 @@ namespace le::lib::reserved
 		if (args.size() != 1)
 			throw(ferr::too_many_arguments(args.size(), 1, "type"));
 
-		return strings::make_string(args.front()->type_name());
+		return make::make_string(args.front()->type_name());
 	}
 
 	inline auto get_iterator(std::span<LeObject> args, MemoryManager& mem) -> LeObject
@@ -46,7 +47,7 @@ namespace le::lib::reserved
 		if (args.size() != 1)
 			throw(ferr::too_many_arguments(args.size(), 1, "iterator"));
 
-		return strings::make_string(args.front()->make_string());
+		return make::make_string(args.front()->make_string());
 	}
 
 	/* Is a specific symbol reserved */
@@ -60,6 +61,7 @@ namespace le::lib::reserved
 		case hashing::Hasher::hash("iterator"):
 		case hashing::Hasher::hash("type"):
 		case hashing::Hasher::hash("string"):
+		case hashing::Hasher::hash("Range"):
 			return true;
 		default:
 			return false;
@@ -80,6 +82,8 @@ namespace le::lib::reserved
 			return global::mem->emplace<ImportedFunction>(get_iterator, "iterator");
 		case hashing::Hasher::hash("string"):
 			return global::mem->emplace<ImportedFunction>(get_string, "string");
+		case hashing::Hasher::hash("Range"):
+			return global::mem->emplace<ImportedFunction>(range_constructor, "Range");
 		//case hashing::Hasher::hash("range"):
 		default:
 			throw(ferr::make_exception("Tried accessing non existent global"));
