@@ -12,6 +12,7 @@ namespace le
 		Pop,
 		Noop, /* Do nothing */
 		ImportDll, /* Expects string to dll at TOS and pushes a dll module to TOS */
+		DupTos, /* Duplicates TOS */
 
 		/* Builtin type creation */
 		PushInt, /* UNUSED CURRENTLY */
