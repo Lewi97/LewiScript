@@ -157,9 +157,9 @@ namespace le
 	{
 		ByteCode code{};
 		String name{};
-		int argc{};
+		u64 argc{};
 	};
-
+	constexpr auto size__frame = sizeof(Frame);
 	/*
 	* make a load global type to load from global space,
 	*/
