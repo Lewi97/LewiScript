@@ -3,6 +3,7 @@
 #include "Builtin.h"
 #include <concepts>
 #include "MemberFunctions.h"
+#include "Boolean.h"
 
 namespace le
 {
@@ -30,7 +31,7 @@ namespace le
 
 		LeObject owner{};
 		_Function function_next{};
-		
+
 		auto type_name() -> String override
 		{
 			return "Iterator";
@@ -43,11 +44,12 @@ namespace le
 			if (member == "next")
 			{
 				return 
-					global::mem->emplace<MemberFunction<This>>(self, [](This& iter, std::span<LeObject>&, struct VirtualMachine&)
+					global::mem->emplace<MemberFunction<This>>(self, [](This& iter, std::span<LeObject>&, class VirtualMachine&)
 					{
 						return iter.function_next(*static_cast<_Owner*>(iter.owner.get()));
 					});
 			}
+
 			throw(ferr::invalid_member(member));
 			return LeObject{};
 		}
