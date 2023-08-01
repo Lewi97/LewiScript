@@ -89,7 +89,7 @@ namespace le
 			return _context.global_strings.get(string); /* Return the global index */
 		}
 
-		auto store_function(ByteCode code, int argc, String name) -> size_t
+		auto store_function(ByteCode code, u64 argc, String name) -> size_t
 		{
 			auto frame = Frame{};
 
