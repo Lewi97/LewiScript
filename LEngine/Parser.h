@@ -299,6 +299,9 @@ namespace le
 		{
 			switch (_lexer->current().type)
 			{
+			case Token::Type::KeywordNull:
+				_lexer->advance(); /* Skip Null keyword */
+				return std::make_unique<NullLiteral>();
 			case Token::Type::Identifier:
 				return make_identifier(_lexer->eat());
 			case Token::Type::StringLiteral:
@@ -440,9 +443,6 @@ namespace le
 		{
 			switch (_lexer->current().type)
 			{
-			case Token::Type::KeywordNull:
-				_lexer->advance(); /* Skip Null keyword */
-				return std::make_unique<NullLiteral>();
 			case Token::Type::KeywordFor:
 				_lexer->advance(); /* Skip for keyword */
 				return parse_for_loop();
