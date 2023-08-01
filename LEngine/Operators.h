@@ -50,6 +50,7 @@ namespace le
 		case '*': case '/':
 		case '=': case '>':
 		case '<': case '!':
+		case ':': 
 			return true;
 		}
 		return false;
@@ -61,6 +62,7 @@ namespace le
 		switch (type)
 		{
 		case op_t::OperatorEquals:
+		case op_t::OperatorWalrus:
 			return precedences::assignment;
 
 		case op_t::OperatorPlus:
