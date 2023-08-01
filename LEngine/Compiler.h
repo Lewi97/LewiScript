@@ -366,13 +366,13 @@ namespace le
 				auto& target = assignment_expr.target;
 				auto& rhs = assignment_expr.right;
 
-				if (statement->type == SType::AssignmentExpression)
-					emit(Instruction(OpCode::DupTos));
 
 				if (target->type == SType::AccessorExpression)
 				{
 					auto& access_expr = as<AccessorExpression>(target.get());
 					access_assign_expr_order_helper(access_expr.target, access_expr.query, rhs);
+					if (statement->type == SType::AssignmentExpression)
+						emit(Instruction(OpCode::DupTos));
 					emit(Instruction(OpCode::AccessAssign));
 				}
 				/* Normal assignment */
@@ -380,6 +380,8 @@ namespace le
 				{
 					auto& identifier = as<Identifier>(target.get());
 					generate(rhs.get());
+					if (statement->type == SType::AssignmentExpression)
+						emit(Instruction(OpCode::DupTos));
 					if (is_global(identifier.name))
 					{
 						emit(Instruction(OpCode::StoreGlobal, get_global(identifier.name)));
