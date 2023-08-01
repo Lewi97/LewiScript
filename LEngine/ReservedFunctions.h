@@ -23,6 +23,14 @@ namespace le::lib::reserved
 		return mem.emplace<NullValue>();
 	}
 
+	inline auto get_type(std::span<LeObject> args, MemoryManager& mem) -> LeObject
+	{
+		if (args.size() != 1)
+			throw(ferr::too_many_arguments(args.size(), 1, "type"));
+
+		return args.front()->type_name();
+	}
+
 	/* Is a specific symbol reserved */
 	inline auto is_reserved(Symbol symbol) -> bool
 	{
@@ -31,7 +39,7 @@ namespace le::lib::reserved
 		switch (hash)
 		{
 		case hashing::Hasher::hash("print"):
-		case hashing::Hasher::hash("range"):
+		case hashing::Hasher::hash("type"):
 			return true;
 		default:
 			return false;
@@ -46,6 +54,8 @@ namespace le::lib::reserved
 		{
 		case hashing::Hasher::hash("print"):
 			return global::mem->emplace<ImportedFunction>(print, "print");
+		case hashing::Hasher::hash("type"):
+			return global::mem->emplace<ImportedFunction>(get_type, "type");
 		//case hashing::Hasher::hash("range"):
 		default:
 			throw(ferr::make_exception("Tried accessing non existent global"));
