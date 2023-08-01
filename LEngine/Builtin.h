@@ -55,7 +55,7 @@ namespace le
 		/*
 		* Overload used by bytecode compiled functions
 		*/
-		virtual auto call(std::span<LeObject>& args, struct VirtualMachine& vm) -> LeObject
+		virtual auto call(std::span<LeObject>& args, class VirtualMachine& vm) -> LeObject
 		{
 			throw(ferr::make_exception("This object cannot be called"));
 			return {};
