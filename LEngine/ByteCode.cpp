@@ -15,12 +15,9 @@ namespace le
 			case RuntimeValue::Type::Function:
 			{
 				const auto& function = static_cast<const CompiledFunction*>(global.get())->function_frame;
-				string += std::format("(Function '{}')\n{}\n", function.name, to_string(function, code));
+				string += std::format("(Function: '{}')\n{}\n", function.name, to_string(function, code));
 				break;
 			}
-			case RuntimeValue::Type::String:
-				string += std::format("String('{}')\n", global->make_string());
-				break;
 			default:
 				string += std::format("({}: '{}')\n", global->type_name(), global->make_string());
 			}
