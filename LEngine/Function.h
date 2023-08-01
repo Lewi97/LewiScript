@@ -3,7 +3,6 @@
 #include "common.h"
 #include "Builtin.h"
 #include "String.h"
-#include "RuntimeStrings.h"
 #include "ByteCode.h"
 
 #include <unordered_map>

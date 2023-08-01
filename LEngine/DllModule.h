@@ -4,7 +4,6 @@
 #include "String.h"
 #include "hashing.h"
 #include "CPPLeFunction.h"
-#include "RuntimeStrings.h"
 
 #include <unordered_map>
 #include <Windows.h>

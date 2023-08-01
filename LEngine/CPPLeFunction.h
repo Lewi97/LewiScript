@@ -3,7 +3,6 @@
 #include "Builtin.h"
 #include <functional>
 #include "GlobalState.h"
-#include "RuntimeStrings.h"
 
 namespace le
 {
