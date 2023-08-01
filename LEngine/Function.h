@@ -88,7 +88,7 @@ namespace le
 			return "Function " + function_frame.name;
 		}
 
-		auto call(std::span<LeObject>& args, struct VirtualMachine& vm) -> LeObject override;
+		auto call(std::span<LeObject>& args, class VirtualMachine& vm) -> LeObject override;
 	};
 }
 
