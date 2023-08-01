@@ -40,6 +40,18 @@ namespace le::ferr
 		);
 	}
 	
+	inline auto incorrect_argument(String got, String expected, size_t arg_pos, String callable) -> Exception
+	{
+		return make_exception(
+			std::format("expected argument {} to be '{}' but got '{}' when calling '{}'"
+				, arg_pos, expected, got, callable));
+	}
+
+	inline auto invalid_conversion(String from, String to, String context = "") -> Exception
+	{
+		return make_exception(std::format("Cannot convert from {} to {}\n{}", from, to, context));
+	}
+
 	inline auto unexpected_token(const Token& got) -> Exception
 	{
 		return make_exception(
