@@ -47,14 +47,14 @@ namespace le
 			}
 		}
 
-		virtual auto make_string() -> String
-		{
-			return String("Null");
-		}
-
 		virtual auto type_name() -> String
 		{
 			return "RuntimeValue";
+		}
+
+		virtual auto make_string() -> String
+		{
+			return type_name();
 		}
 
 		/*
