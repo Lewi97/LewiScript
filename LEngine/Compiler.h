@@ -375,9 +375,15 @@ namespace le
 				else if (target->type == SType::IdentifierExpression)
 				{
 					auto& identifier = as<Identifier>(target.get());
-					auto var_index = _vars.get(identifier.name);
 					generate(rhs.get());
-					emit(Instruction(OpCode::Store, var_index));
+					if (is_global(identifier.name))
+					{
+						emit(Instruction(OpCode::StoreGlobal, get_global(identifier.name)));
+					}
+					else
+					{
+						emit(Instruction(OpCode::Store, _vars.get(identifier.name)));
+					}
 				}
 				else
 				{
