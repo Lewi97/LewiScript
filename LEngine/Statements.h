@@ -32,6 +32,7 @@ namespace le
 			ForLoop,
 
 			/* Expressions */
+			NullExpression,
 			BinaryExpression,
 			NumericLiteralExpression,
 			StringLiteralExpression,
@@ -72,6 +73,7 @@ namespace le
 			LE_STATEMENT_TYPE_TO_STRING_CASE(ArrayExpression);
 			LE_STATEMENT_TYPE_TO_STRING_CASE(MemberExpression);
 			LE_STATEMENT_TYPE_TO_STRING_CASE(UnaryOperation);
+			LE_STATEMENT_TYPE_TO_STRING_CASE(NullExpression);
 		}
 		return "Unknown";
 	}
@@ -241,6 +243,11 @@ namespace le
 		accessor->query = std::move(query);
 		return accessor;
 	}
+
+	struct NullLiteral : Expression
+	{
+		NullLiteral() { type = Type::NullExpression; }
+	};
 
 	struct BinaryOperation : Expression
 	{

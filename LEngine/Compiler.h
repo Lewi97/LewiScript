@@ -497,6 +497,9 @@ namespace le
 				}
 				break;
 			}
+			case SType::NullExpression:
+				emit(Instruction(OpCode::PushNull));
+				break;
 			default:
 				throw(ferr::make_exception(std::format("Statement '{}' is not supported yet by the compiler", to_string(statement->type))));
 			}

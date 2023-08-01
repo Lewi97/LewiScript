@@ -39,6 +39,7 @@ namespace le
 			KeywordReturn,
 			KeywordAs,
 			KeywordFor,
+			KeywordNull,
 
 			/* Operators */
 			OperatorEquals,
@@ -103,6 +104,7 @@ namespace le
 			LE_TO_STRING(OperatorMinus);
 			LE_TO_STRING(OperatorMultiply);
 			LE_TO_STRING(OperatorDivide);
+			LE_TO_STRING(KeywordNull);
 		}
 		return "Unknown";
 	}

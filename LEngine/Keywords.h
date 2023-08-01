@@ -7,7 +7,7 @@ namespace le
 	#define LE_SCRIPT_RESERVED_KEYWORD_LIST "var", "fn", "end", "if", "elif", "else", "while", "import", "as"
 
 	inline auto to_keyword(const StringView& view) -> Token::Type
-	{
+	{ /* We gotta clean this up lmao */
 		if (view == "var")
 			return Token::Type::KeywordVar;
 		if (view == "fn")
@@ -36,6 +36,8 @@ namespace le
 			return Token::Type::KeywordFor;
 		if (view == "in")
 			return Token::Type::OperatorIn;
+		if (view == "Null")
+			return Token::Type::KeywordNull;
 		return Token::Type::Null;
 	}
 }

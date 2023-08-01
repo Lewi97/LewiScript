@@ -23,6 +23,7 @@ namespace le
 		PushFunction, /* Operand denotes index of Frame in functions vector */
 
 		MakeArray, /* Operand denotes amount of values */
+		PushNull, /* Push null onto stack */
 
 		/* For loop and iterators */
 		GetIter, /* calls TOS->iterator(self) */
