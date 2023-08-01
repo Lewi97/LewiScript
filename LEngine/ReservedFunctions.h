@@ -5,6 +5,8 @@
 #include "Builtin.h"
 #include "CPPLeFunction.h"
 #include "hashing.h"
+#include "RuntimeStrings.h"
+#include "Null.h"
 
 /*
 * These are the types and functions that are always active in the namespace
@@ -28,7 +30,7 @@ namespace le::lib::reserved
 		if (args.size() != 1)
 			throw(ferr::too_many_arguments(args.size(), 1, "type"));
 
-		return args.front()->type_name();
+		return strings::make_string(args.front()->type_name());
 	}
 
 	inline auto get_iterator(std::span<LeObject> args, MemoryManager& mem) -> LeObject
