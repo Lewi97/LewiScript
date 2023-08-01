@@ -66,7 +66,7 @@ namespace le
 				return global::mem->emplace<MemberFunction<Array>>(self,
 					[](Array& self, std::span<LeObject>& args, struct VirtualMachine&)->LeObject
 					{
-						return global::mem->emplace<NumberValue>(self.data.size());
+						return global::mem->emplace<NumberValue>(static_cast<double>(self.data.size()));
 					}
 				);
 			}
