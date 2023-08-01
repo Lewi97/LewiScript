@@ -151,7 +151,7 @@ namespace le
 					case ',':
 						token.type = Token::Type::Comma;
 						token.raw = StringView(itr, itr + 1); itr++; break;
-					case ':':
+					case ':': /* Currently recognized in operators */
 						token.type = Token::Type::Colon;
 						token.raw = StringView(itr, itr + 1); itr++; break;
 					case '.':
