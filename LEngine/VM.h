@@ -302,6 +302,11 @@ namespace le
 				storage().store(instr.operand.uinteger, pop());
 				LE_NEXT_INSTRUCTION;
 			}
+			case OpCode::DupTos:
+			{
+				push(tos());
+				LE_NEXT_INSTRUCTION;
+			}
 			case OpCode::PushReal:
 			{
 				push(global::mem->emplace<NumberValue>(instr.operand.real));

@@ -359,11 +359,15 @@ namespace le
 				);
 				break;
 			}
-			case SType::AssignmentExpression: /* Currently not an expression as it doesnt push the result to tos */
+			case SType::AssignmentStatement:
+			case SType::AssignmentExpression:
 			{
 				auto& assignment_expr = as<AssignmentExpression>(statement);
 				auto& target = assignment_expr.target;
 				auto& rhs = assignment_expr.right;
+
+				if (statement->type == SType::AssignmentExpression)
+					emit(Instruction(OpCode::DupTos));
 
 				if (target->type == SType::AccessorExpression)
 				{
