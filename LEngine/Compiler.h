@@ -442,9 +442,8 @@ namespace le
 				{
 					/* First time loading this global, so save it as global variable */
 					emit(Instruction(OpCode::PushGlobal, store_global(lib::reserved::get(identifier.name))));
+					emit(Instruction(OpCode::DupTos)); /* Cheaper than loading it again after storeglobal pops it */
 					emit(Instruction(OpCode::StoreGlobal, register_global(identifier.name)));
-
-					emit(Instruction(OpCode::LoadGlobal, get_global(identifier.name)));
 				}
 				else
 				{
