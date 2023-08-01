@@ -132,10 +132,11 @@
     <ClCompile Include="Boolean.cpp" />
     <ClCompile Include="ByteCode.cpp" />
     <ClCompile Include="Function.cpp" />
+    <ClCompile Include="getters.cpp" />
     <ClCompile Include="GlobalState.cpp" />
     <ClCompile Include="LEngine.cpp" />
     <ClCompile Include="MemberFunctions.cpp" />
-    <ClCompile Include="RuntimeStrings.cpp" />
+    <ClCompile Include="TypeFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractVal.h" />
@@ -150,6 +151,7 @@
     <ClInclude Include="format_errs.h" />
     <ClInclude Include="Function.h" />
     <ClInclude Include="generics.h" />
+    <ClInclude Include="getters.h" />
     <ClInclude Include="GlobalState.h" />
     <ClInclude Include="hashing.h" />
     <ClInclude Include="Interpreter.h" />
@@ -165,10 +167,11 @@
     <ClInclude Include="Number.h" />
     <ClInclude Include="Operators.h" />
     <ClInclude Include="Parser.h" />
+    <ClInclude Include="Range.h" />
     <ClInclude Include="Repl.h" />
     <ClInclude Include="ReservedFunctions.h" />
     <ClInclude Include="Runner.h" />
-    <ClInclude Include="RuntimeStrings.h" />
+    <ClInclude Include="TypeFactory.h" />
     <ClInclude Include="Statements.h" />
     <ClInclude Include="Storage.h" />
     <ClInclude Include="String.h" />

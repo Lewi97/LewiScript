@@ -48,7 +48,10 @@
     <ClCompile Include="ByteCode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RuntimeStrings.cpp">
+    <ClCompile Include="TypeFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="getters.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -161,11 +164,17 @@
     <ClInclude Include="ReservedFunctions.h">
       <Filter>Header Files\lib</Filter>
     </ClInclude>
-    <ClInclude Include="RuntimeStrings.h">
+    <ClInclude Include="TypeFactory.h">
       <Filter>Header Files\tools</Filter>
     </ClInclude>
-    <ClInclude Include="Null.h">
+    <ClInclude Include="getters.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Null.h">
+      <Filter>Header Files\builtin</Filter>
+    </ClInclude>
+    <ClInclude Include="Range.h">
+      <Filter>Header Files\builtin</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
