@@ -35,6 +35,7 @@ namespace le
 			case op_hash('<', '='): return Token::Type::OperatorLET;
 			case op_hash('!', '='): return Token::Type::OperatorNEq;
 			case op_hash('=', '='): return Token::Type::OperatorEq;
+			case op_hash(':', '='): return Token::Type::OperatorWalrus;
 			}
 		}
 

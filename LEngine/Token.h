@@ -42,6 +42,7 @@ namespace le
 
 			/* Operators */
 			OperatorEquals,
+			OperatorWalrus,
 			OperatorPlus,
 			OperatorMinus,
 			OperatorMultiply,
