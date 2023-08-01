@@ -17,6 +17,11 @@ namespace le
 			return "Null";
 		}
 
+		auto to_native_bool() const -> bool override
+		{
+			return false;
+		}
+
 		auto make_string() -> String override
 		{
 			return String("Null");

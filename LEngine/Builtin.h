@@ -80,7 +80,7 @@ namespace le
 
 		virtual auto to_native_bool() const -> bool
 		{
-			return false;
+			return true;
 		}
 		
 		/*
