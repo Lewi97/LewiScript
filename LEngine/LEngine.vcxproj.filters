@@ -155,6 +155,9 @@
     <ClInclude Include="MemberFunctions.h">
       <Filter>Header Files\builtin</Filter>
     </ClInclude>
+    <ClInclude Include="ReservedFunctions.h">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="file.le">

@@ -164,6 +164,7 @@
     <ClInclude Include="Operators.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Repl.h" />
+    <ClInclude Include="ReservedFunctions.h" />
     <ClInclude Include="Runner.h" />
     <ClInclude Include="Statements.h" />
     <ClInclude Include="Storage.h" />
