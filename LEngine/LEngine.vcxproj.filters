@@ -48,6 +48,9 @@
     <ClCompile Include="ByteCode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RuntimeStrings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lexer.h">
@@ -157,6 +160,9 @@
     </ClInclude>
     <ClInclude Include="ReservedFunctions.h">
       <Filter>Header Files\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="RuntimeStrings.h">
+      <Filter>Header Files\tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

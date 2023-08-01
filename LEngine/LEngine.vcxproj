@@ -135,6 +135,7 @@
     <ClCompile Include="GlobalState.cpp" />
     <ClCompile Include="LEngine.cpp" />
     <ClCompile Include="MemberFunctions.cpp" />
+    <ClCompile Include="RuntimeStrings.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractVal.h" />
@@ -166,6 +167,7 @@
     <ClInclude Include="Repl.h" />
     <ClInclude Include="ReservedFunctions.h" />
     <ClInclude Include="Runner.h" />
+    <ClInclude Include="RuntimeStrings.h" />
     <ClInclude Include="Statements.h" />
     <ClInclude Include="Storage.h" />
     <ClInclude Include="String.h" />
