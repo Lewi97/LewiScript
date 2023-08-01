@@ -80,15 +80,15 @@ namespace le::lib::reserved
 			return global::mem->emplace<ImportedFunction>(print, "print");
 		case hashing::Hasher::hash("type"):
 			return global::mem->emplace<ImportedFunction>(get_type, "type");
-		case hashing::Hasher::hash("iterator"):
+		case hashing::Hasher::hash("Iterator"):
 			return global::mem->emplace<ImportedFunction>(get_iterator, "Iterator");
-		case hashing::Hasher::hash("string"):
+		case hashing::Hasher::hash("String"):
 			return global::mem->emplace<ImportedFunction>(get_string, "String");
 		case hashing::Hasher::hash("Range"):
 			return global::mem->emplace<ImportedFunction>(range_constructor, "Range");
 		//case hashing::Hasher::hash("range"):
 		default:
-			throw(ferr::make_exception("Tried accessing non existent global"));
+			throw(ferr::make_exception(std::format("Tried accessing non existent global '{}'", symbol)));
 			return nullptr;
 		}
 	}
