@@ -161,6 +161,7 @@
     <ClInclude Include="MemberFunctions.h" />
     <ClInclude Include="MemoryManager.h" />
     <ClInclude Include="Module.h" />
+    <ClInclude Include="Null.h" />
     <ClInclude Include="Number.h" />
     <ClInclude Include="Operators.h" />
     <ClInclude Include="Parser.h" />

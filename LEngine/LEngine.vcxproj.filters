@@ -164,6 +164,9 @@
     <ClInclude Include="RuntimeStrings.h">
       <Filter>Header Files\tools</Filter>
     </ClInclude>
+    <ClInclude Include="Null.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="file.le">
