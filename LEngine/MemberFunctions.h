@@ -10,14 +10,14 @@ namespace le
     struct MemberFunction
         : RuntimeValue
     {
-        using Function = LeObject(*)(_This&, std::span<LeObject>&, struct VirtualMachine&);
+        using Function = LeObject(*)(_This&, std::span<LeObject>&, class VirtualMachine&);
 
         MemberFunction(LeObject object, Function func)
             : _this(object)
             , _function(func)
         {}
 
-        auto call(std::span<LeObject>& args, struct VirtualMachine& vm) -> LeObject override
+        auto call(std::span<LeObject>& args, class VirtualMachine& vm) -> LeObject override
         {
             return _function(*static_cast<_This*>(_this.get()), args, vm);
         }
