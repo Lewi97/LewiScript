@@ -429,7 +429,7 @@ namespace le
 			loop->var = _lexer->eat().raw;
 			expect(Token::Type::OperatorIn);
 			_lexer->advance();
-			loop->target = parse_primary_expr();
+			loop->target = parse_assignment_expr();
 			expect(Token::Type::Colon);
 			_lexer->advance();
 			loop->body = parse_block_statement();
