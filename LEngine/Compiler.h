@@ -359,7 +359,7 @@ namespace le
 				);
 				break;
 			}
-			case SType::AssignmentExpression:
+			case SType::AssignmentExpression: /* Currently not an expression as it doesnt push the result to tos */
 			{
 				auto& assignment_expr = as<AssignmentExpression>(statement);
 				auto& target = assignment_expr.target;
