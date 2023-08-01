@@ -12,7 +12,9 @@ namespace le
     struct ImportedFunction :
         public RuntimeValue
     {
-        explicit ImportedFunction(FFI_FUNC f) : func(f)
+        explicit ImportedFunction(FFI_FUNC f, String string = "") 
+            : func(f)
+            , name(string)
         {
             if (f == nullptr)
                 throw(ferr::make_exception("Tried to create an imported function from a nullptr"));
@@ -21,6 +23,12 @@ namespace le
         }
 
         FFI_FUNC func{};
+        String name{};
+
+        auto make_string() -> String override
+        {
+            return name;
+        }
 
         /*
         * func is assumed to be not null
@@ -30,4 +38,5 @@ namespace le
             return func(args, *global::mem);
         }
     };
+
 }
