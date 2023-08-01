@@ -59,7 +59,7 @@ namespace le
 				throw(ferr::make_exception(std::format("Unclosed {} expected {} at line {} column {}"
 				, to_string(token.type), guard, _current_line, _current_column)));
 			token.raw = StringView(itr, end); /* end == guard so subtract 1 */
-			_current_column += std::distance(itr, ++end); /* increment end over guard */
+			_current_column += static_cast<i32>(std::distance(itr, ++end)); /* increment end over guard */
 			return end;
 		}
 
