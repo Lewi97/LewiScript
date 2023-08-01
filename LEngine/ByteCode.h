@@ -143,7 +143,7 @@ namespace le
 			u64 uinteger;
 			i64 integer;
 			double real;
-		} operand;
+		} operand{ 0ull };
 	};
 	//constexpr auto instruction__size = sizeof(Instruction);
 
