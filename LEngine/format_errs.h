@@ -22,6 +22,11 @@ namespace le::ferr
 		return make_exception(std::format("Called {} with {} arguments expected {}", callable_name, args, expected));
 	}
 
+	inline auto unrecognized_character(char c) -> Exception
+	{
+		return make_exception(std::format("Unrecognized character '{}' detected", c));
+	}
+
 	inline auto invalid_member(String member) -> Exception
 	{
 		return make_exception(std::format("Invalid member '{}'", member));
