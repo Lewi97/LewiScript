@@ -86,34 +86,33 @@ auto compiler_main(int, char**) -> void
 {
     const auto source =
         R"( 
-var list = [1,2,2,3,2,3]
-var list_size = 6
-var i = 0
-var count = 0
-while i != list_size - 1:
-    i = i + 1
-    if list[i] != 2: continue end
-    count = count + 1
+var iter = Iterator(Range(0, 10, 2))
+
+var current = Null
+while current := iter.next():
+  print(current)
 end
 
-count
 )";
 
-    le::unit_test::start();
-
-    //le::print_bytecode(source, "__main__");
-    //auto result = le::run_with_vm(source, "__main__");
-    //if (result)
-    //    std::cout << "\n\nResult: " << result->make_string() << '\n';
+    //le::unit_test::start();
+    
+    le::print_bytecode(source, "__main__");
+    auto result = le::run_with_vm(source, "__main__");
+    if (result)
+        std::cout << "\n\nResult: " << result->make_string() << '\n';
 }
 
 int main(int argc, char** argv)
 {
     auto global_memory_manager = le::MemoryManager();
     le::global::mem = &global_memory_manager;
-
+    le::global::null = global_memory_manager.emplace<le::NullValue>();
+    
     // tree_interpreter_main(argc, argv);
     compiler_main(argc, argv);
+
+    le::global::null.reset();
     return 0;
 }
 
