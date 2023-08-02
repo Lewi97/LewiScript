@@ -343,16 +343,20 @@ namespace le
 			_null_val = global::null;
 		}
 
-		auto run(const Frame& frame, std::span<LeObject>& args) -> LeObject
+		auto run(const Frame& frame, std::span<LeObject>& args, LeObject this_ptr = nullptr) -> LeObject
 		{
 			auto old_pc = _pc;
 			_pc = frame.code.cbegin();
-			
+
 			auto end = frame.code.cend();
 
 			open_scope(end);
-			for (auto argc{ 0ull }; auto& arg : args)
-			{ 
+
+			auto argc{ 0ull };
+			if (this_ptr)
+				storage().store(argc++, this_ptr);
+			for (auto & arg : args)
+			{
 				storage().store(argc++, arg);
 			}
 
