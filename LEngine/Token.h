@@ -39,6 +39,7 @@ namespace le
 			KeywordReturn,
 			KeywordAs,
 			KeywordFor,
+			KeywordClass,
 			KeywordNull,
 
 			/* Operators */
