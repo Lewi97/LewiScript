@@ -144,6 +144,7 @@
     <ClInclude Include="Boolean.h" />
     <ClInclude Include="Builtin.h" />
     <ClInclude Include="ByteCode.h" />
+    <ClInclude Include="Class.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="Compiler.h" />
     <ClInclude Include="CPPLeFunction.h" />

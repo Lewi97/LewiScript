@@ -176,6 +176,9 @@
     <ClInclude Include="Range.h">
       <Filter>Header Files\builtin</Filter>
     </ClInclude>
+    <ClInclude Include="Class.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="file.le">

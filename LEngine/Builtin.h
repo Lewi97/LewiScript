@@ -16,7 +16,7 @@ namespace le
 		*/
 		enum class Type
 		{
-			Null, NumericLiteral, Variable, String, Function, Boolean, Module, Iterator, Custom
+			Null, NumericLiteral, Variable, String, Function, Boolean, Module, Iterator, Class, Custom
 		};
 
 		Type type{};
