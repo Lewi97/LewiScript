@@ -32,6 +32,11 @@ namespace le::ferr
 		return make_exception(std::format("Invalid member '{}'", member));
 	}
 
+	inline auto invalid_member(String member, String in) -> Exception
+	{
+		return make_exception(std::format("Invalid member '{}' in '{}'", member, in));
+	}
+
 	inline auto failed_assignment(String left, String right) -> Exception
 	{
 		return make_exception(
