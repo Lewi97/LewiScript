@@ -367,7 +367,7 @@ namespace le
 				auto& rhs = assignment_expr.right;
 
 
-				if (target->type == SType::AccessorExpression)
+				if (target->type == SType::AccessorExpression || target->type == SType::MemberExpression)
 				{
 					auto& access_expr = as<AccessorExpression>(target.get());
 					access_assign_expr_order_helper(access_expr.target, access_expr.query, rhs);
