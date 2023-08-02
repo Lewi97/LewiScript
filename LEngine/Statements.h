@@ -22,6 +22,7 @@ namespace le
 			ImportStatement,
 			BreakStatement,
 			ContinueStatement,
+			ClassDeclaration, /* class Class: */
 
 			VarAssignmentStatement, /* var a = 1 */
 			AssignmentStatement, /* a = 1 */
@@ -42,6 +43,7 @@ namespace le
 			MemberExpression,
 			ArrayExpression,
 			FunctionDeclarationExpression, /* Expr so we can assign it to variables */
+			MemberFunctionDeclaration, 
 			CallExpression,
 			AssignmentExpression, /* a := 1 */
 			ReturnExpression
@@ -74,6 +76,8 @@ namespace le
 			LE_STATEMENT_TYPE_TO_STRING_CASE(MemberExpression);
 			LE_STATEMENT_TYPE_TO_STRING_CASE(UnaryOperation);
 			LE_STATEMENT_TYPE_TO_STRING_CASE(NullExpression);
+			LE_STATEMENT_TYPE_TO_STRING_CASE(ClassDeclaration);
+			LE_STATEMENT_TYPE_TO_STRING_CASE(MemberFunctionDeclaration);
 		}
 		return "Unknown";
 	}
@@ -98,6 +102,15 @@ namespace le
 
 		PExpression target{}; /* Access, identifier, member expressions */
 		PExpression right{};
+	};
+
+	/* class 'identifier': */
+	struct ClassDeclaration : Statement
+	{
+		ClassDeclaration() { type = Type::ClassDeclaration; }
+		
+		Symbol name{};
+		std::vector<PStatement> members{};
 	};
 
 	/* import [identifier] */
@@ -204,6 +217,13 @@ namespace le
 		std::vector<Symbol> args{};
 		std::unique_ptr<BlockStatement> body{};
 	};
+
+	/* A function with a special identifier so we know to pass it a this pointer */
+	/* Currently unused */
+	//struct MemberFunctionDeclaration : FunctionDeclaration
+	//{
+	//	MemberFunctionDeclaration() { type = Type::MemberFunctionDeclaration; }
+	//};
 
 	struct CallExpression : Expression
 	{

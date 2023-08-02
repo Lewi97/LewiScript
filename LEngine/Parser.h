@@ -220,6 +220,13 @@ namespace le
 			throw(ferr::unexpected_token(type, _lexer->current()));
 		}
 
+		/* Tries eating param */
+		auto eat(Token::Type type) -> Token
+		{
+			expect(type);
+			return _lexer->eat();
+		}
+
 		/* Checks if expression is of type type*/
 		auto expect(Statement::Type type, PExpression& got) -> void
 		{
@@ -439,10 +446,33 @@ namespace le
 			return loop;
 		}
 
+		auto parse_class_declaration() -> PStatement
+		{
+			auto class_stmt = std::make_unique<ClassDeclaration>();
+			class_stmt->name = eat(Token::Type::Identifier).raw;
+			
+			while (
+				not _lexer->empty() or 
+				_lexer->current().type != Token::Type::KeywordEnd)
+			{
+				auto statement = parse_statement();
+				
+				if (statement->type == Statement::Type::FunctionDeclarationExpression)
+					statement->type = Statement::Type::MemberFunctionDeclaration;
+
+				class_stmt->members.push_back(std::move(statement));
+			}
+
+			return class_stmt;
+		}
+
 		auto parse_statement() -> PStatement
 		{
 			switch (_lexer->current().type)
 			{
+			case Token::Type::KeywordClass:
+				_lexer->advance(); /* Skip for keyword */
+				return parse_class_declaration();
 			case Token::Type::KeywordFor:
 				_lexer->advance(); /* Skip for keyword */
 				return parse_for_loop();
