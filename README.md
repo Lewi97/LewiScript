@@ -6,8 +6,7 @@ I was wondering if it would be hard to make a scripting language that natively i
 
 # Native types
 ```
-# there are currently only 4 native types
-# there are plans for more: proper bool type, maps, etc
+# there are plans for more: proper bool type, maps, classes etc
 var number = 5 
 var string = "number = " + String(number) 
 var lambda = fn(n): n * 2 end
