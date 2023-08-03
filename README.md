@@ -65,7 +65,7 @@ end
 # Builtin functions
 ```
 type      # Implements Type->type_name()
-print     # Prints arguments through to cout
+print     # Prints arguments to cout
 String    # Implements Type->make_string() can also be seen as string constructor
 Iterator  # Implements Type->iterator()
 Range     # Range type constructor
@@ -90,5 +90,10 @@ end
 fn func(x):
   x = x + 5
   return -x
+end
+
+# Or with the walrus operator if u are a true monster
+fn func(x):
+  -(x := x + 5)
 end
 ```
