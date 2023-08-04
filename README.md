@@ -55,6 +55,14 @@ end
 # This one does not, it assigns a lambda to a variable
 var func = fn(): return 5 end
 
+# Functions return the result of the last expression or Null
+fn add(a,b): a + b end
+# If a void function is desired one can either explicitly return Null or call an empty return
+fn append_to(list, element):
+  list.append(element)
+  return
+end
+
 # Functions can be declared within functions, however those will not be declared in the global namespace so besides syntax there is no difference between it and a lambda
 fn func():
   fn func2(): return 5 end
