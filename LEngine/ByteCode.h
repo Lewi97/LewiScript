@@ -24,6 +24,8 @@ namespace le
 
 		MakeArray, /* Operand denotes amount of values */
 		PushNull, /* Push null onto stack */
+		MakeMember, /* Implements tos->make_member(tos, tos2, tos3) where tos->type == Type::Class */
+		PushEmptyClass, /* Pushes an empty class object to tos */
 
 		/* For loop and iterators */
 		GetIter, /* calls TOS->iterator(self) */
@@ -97,6 +99,7 @@ namespace le
 			LE_TO_STR(ImportDll); LE_TO_STR(AccessMember);
 			LE_TO_STR(GetIter); LE_TO_STR(ForLoop);
 			LE_TO_STR(DupTos); LE_TO_STR(PushNull);
+			LE_TO_STR(MakeMember); LE_TO_STR(PushEmptyClass);
 		}
 		return "Unknown opcode";
 	}
@@ -180,6 +183,8 @@ namespace le
 		VarMap global_names{};
 		/* Strings, check if we arent adding any duplicates */
 		VarMap global_strings{};
+		/* Namespace name, currently used for communicating currently compiling class */
+		StringView namespace_name{};
 	};
 
 	constexpr auto size__code = sizeof(Code);
