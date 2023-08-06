@@ -625,6 +625,11 @@ namespace le
 			const auto accessor = static_cast<const AccessorExpression*>(expr);
 			string = std::format("( Type: {} Target: {} Query: {} )", to_string(expr->type), to_string(accessor->target.get()), to_string(accessor->query.get())); break;
 		}
+		case Statement::Type::MemberExpression:
+		{
+			const auto memexpr = static_cast<const MemberExpression*>(expr);
+			string = std::format("( Type: {} Target: {} Query: {} )", to_string(expr->type), to_string(memexpr->target.get()), to_string(memexpr->query.get())); break;
+		}
 		case Statement::Type::ArrayExpression:
 		{
 			const auto arr = static_cast<const ArrayExpression*>(expr);
