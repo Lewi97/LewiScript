@@ -450,19 +450,16 @@ namespace le
 		{
 			auto class_stmt = std::make_unique<ClassDeclaration>();
 			class_stmt->name = eat(Token::Type::Identifier).raw;
-			
+			eat(Token::Type::Colon);
 			while (
-				not _lexer->empty() or 
+				not _lexer->empty() and 
 				_lexer->current().type != Token::Type::KeywordEnd)
 			{
 				auto statement = parse_statement();
 				
-				if (statement->type == Statement::Type::FunctionDeclarationExpression)
-					statement->type = Statement::Type::MemberFunctionDeclaration;
-
 				class_stmt->members.push_back(std::move(statement));
 			}
-
+			_lexer->advance(); /* Skip keywordend */
 			return class_stmt;
 		}
 
