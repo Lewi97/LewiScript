@@ -7,6 +7,7 @@
 #include "Function.h"
 #include "Array.h"
 #include "DllModule.h"
+#include "Class.h"
 
 #include <variant>
 #include <stack>
@@ -261,6 +262,24 @@ namespace le
 				push(target->member_access(target, static_cast<StringValue*>(query.get())->string));
 				LE_NEXT_INSTRUCTION;
 			}
+			case OpCode::PushEmptyClass:
+			{
+				push(global::mem->emplace<Class>());
+				LE_NEXT_INSTRUCTION;
+			}
+			case OpCode::MakeMember:
+			{
+				auto target = pop();
+				auto member = pop(); /* Could maybe make the operand of the opcode hold index to member in global string array */
+				auto value = pop();
+
+				if (target->type != RuntimeValue::Type::Class)
+					throw(ferr::make_exception("Cannot assign a member to a non class type"));
+
+				static_cast<Class*>(target.get())->make_member(target, getters::get_string_ref(member, "Assigning member to class"), value);
+
+				LE_NEXT_INSTRUCTION;
+			}
 			case OpCode::MakeArray:
 			{
 				const auto array_size = instr.operand.uinteger;
@@ -383,8 +402,8 @@ namespace le
 			_current_code = &code;
 			_pc = _current_code->code.cbegin();
 
-			//try
-			//{
+			try
+			{
 				auto end = _current_code->code.cend();
 				open_begin_scope(end);
 				while(_pc != end)
@@ -415,11 +434,11 @@ namespace le
 					close_scope();
 					return ret;
 				}
-			//}
-			/*catch (const std::exception& e)
+			}
+			catch (const std::exception& e)
 			{
 				return String(e.what());
-			}*/
+			}
 		}
 	};
 }
