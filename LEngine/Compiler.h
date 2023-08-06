@@ -577,7 +577,7 @@ namespace le
 		{
 			_code_obj = &code_object;
 
-			if (is_compiling_class())
+			if (in_class_namespace)
 			{
 				emit(Instruction(OpCode::PushEmptyClass));
 				emit(Instruction(OpCode::Store, get("this")));
@@ -588,7 +588,7 @@ namespace le
 				generate(statement.get());
 			}
 
-			if (in_class_namespace and is_compiling_class())
+			if (in_class_namespace)
 				emit(Instruction(OpCode::Load, get("this")));
 
 			emit(Instruction(OpCode::Halt));
