@@ -12,8 +12,6 @@
 #include <variant>
 #include <stack>
 
-#define LE_RUN(start, end) run(start, end)
-
 namespace le
 {
 	class VirtualMachine
@@ -138,7 +136,6 @@ namespace le
 		{
 			scope.stack.push_back(object);
 		}
-
 
 		auto jump(i64 delta) -> void
 		{ 
@@ -364,11 +361,6 @@ namespace le
 				evaluate(*_pc);
 			}
 		}
-
-		auto run_debug(ProgramCounter pc, ProgramCounter end) -> void
-		{
-
-		}
 	public:
 		VirtualMachine()
 		{
@@ -392,7 +384,7 @@ namespace le
 				storage().store(argc++, arg);
 			}
 
-			LE_RUN(_pc, end);
+			run(_pc, end);
 
 			auto return_val = _null_val;
 			if (not stack().empty())
@@ -417,7 +409,7 @@ namespace le
 				auto end = _current_code->code.cend();
 				open_begin_scope(end);
 				
-				LE_RUN(_pc, end);
+				run(_pc, end);
 
 				if (stack().empty())
 				{
@@ -437,6 +429,33 @@ namespace le
 			}
 		}
 	};
+
+	template<typename Debugger>
+	class DebugVirtualMachine
+		: public VirtualMachine
+	{
+		static_assert(std::invocable<Debugger, DebugVirtualMachine&>);
+		friend Debugger;
+	protected:
+		Debugger _debugger{};
+
+		auto run(ProgramCounter pc, ProgramCounter end) -> void
+		{
+			while (_pc != end)
+			{
+				_debugger(*this);
+				evaluate(*_pc);
+			}
+		}
+	public:
+		DebugVirtualMachine(Debugger debugger)
+			: _debugger(debugger)
+		{
+			_null_val = global::null;
+		}
+	};
+
+	constexpr auto size__virtualmachine = sizeof(VirtualMachine);
 }
 
 #undef LE_RUN
