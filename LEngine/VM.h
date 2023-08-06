@@ -48,13 +48,12 @@ namespace le
 		};
 		
 		std::vector<Scope> _scopes{};
-		
-		Code* _current_code{ nullptr };
-		ProgramCounter _pc{};
 		/* Reusable vector for pushing function args */
 		FunctionArgs _function_args{};
-		LeObject _null_val{};
 		VarStorage _global_storage{};
+		LeObject _null_val{};
+		Code* _current_code{ nullptr };
+		ProgramCounter _pc{};
 
 		/* @return returns previous scope */
 		auto open_scope(ProgramCounter end) -> void
