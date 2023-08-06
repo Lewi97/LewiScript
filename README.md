@@ -6,8 +6,7 @@ I was wondering if it would be hard to make a scripting language that natively i
 
 # Native types
 ```
-# there are currently only 4 native types
-# there are plans for more: proper bool type, maps, etc
+# there are plans for more: proper bool type, maps, classes etc
 var number = 5 
 var string = "number = " + String(number) 
 var lambda = fn(n): n * 2 end
@@ -56,6 +55,14 @@ end
 # This one does not, it assigns a lambda to a variable
 var func = fn(): return 5 end
 
+# Functions return the result of the last expression or Null
+fn add(a,b): a + b end
+# If a void function is desired one can either explicitly return Null or call an empty return
+fn append_to(list, element):
+  list.append(element)
+  return
+end
+
 # Functions can be declared within functions, however those will not be declared in the global namespace so besides syntax there is no difference between it and a lambda
 fn func():
   fn func2(): return 5 end
@@ -66,7 +73,7 @@ end
 # Builtin functions
 ```
 type      # Implements Type->type_name()
-print     # Prints arguments through to cout
+print     # Prints arguments to cout
 String    # Implements Type->make_string() can also be seen as string constructor
 Iterator  # Implements Type->iterator()
 Range     # Range type constructor
@@ -91,5 +98,10 @@ end
 fn func(x):
   x = x + 5
   return -x
+end
+
+# Or with the walrus operator if u are a true monster
+fn func(x):
+  -(x := x + 5)
 end
 ```
