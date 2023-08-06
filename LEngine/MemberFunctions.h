@@ -37,7 +37,9 @@ namespace le
         BuiltinMemberFunction(LeObject self, const struct Frame& func)
             : _this(self)
             , _function(func)
-        {}
+        {
+            type = Type::Custom;
+        }
 
         auto call(std::span<LeObject>& args, class VirtualMachine& vm) -> LeObject override;
 
