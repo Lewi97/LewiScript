@@ -3,6 +3,7 @@
 #include "Builtin.h"
 #include "Function.h"
 #include "getters.h"
+#include "MemberFunctions.h"
 
 #include <vector>
 #include <span>
@@ -18,7 +19,7 @@ namespace le
 		Class() { type = Type::Class; }
 
 		String name{};
-		std::unordered_map<Symbol, LeObject> members{};
+		std::unordered_map<String, LeObject> members{};
 		
 		auto type_name() -> String override
 		{
@@ -31,21 +32,31 @@ namespace le
 			{
 				return member;
 			}
-			throw(ferr::invalid_member(query, name));
+			throw(ferr::invalid_member(query, query));
+		}
+
+		auto make_member(LeObject self, const String& member, LeObject assign) -> void
+		{
+			if (assign->type == Type::Function)
+				assign = global::mem->emplace<BuiltinMemberFunction>(self, static_cast<CompiledFunction*>(assign.get())->function_frame);
+
+			members.insert(std::pair{ member, assign });
 		}
 		
 		auto access_assign(LeObject query, LeObject new_val) -> LeObject override
 		{
 			if (query->type != Type::String)
 				throw(ferr::invalid_access(type_name(), query->type_name()));
-
+			
 			auto& str = getters::get_string_ref(query, "access assign");
-			members[str] = query; /* Create if we dont have it, else assign it */
-			return query;
+			if (not has_member(str))
+				throw(ferr::invalid_member(str));
+
+			return members.at(str) = new_val;
 		}
 
 		/* Can be null */
-		auto has_member(Symbol str) -> LeObject
+		auto has_member(const String& str) -> LeObject
 		{
 			if (auto res = members.find(str);
 				res != members.end())
@@ -57,5 +68,4 @@ namespace le
 	};
 
 	constexpr auto size__class = sizeof(Class);
-
 }
