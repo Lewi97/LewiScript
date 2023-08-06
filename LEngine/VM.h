@@ -12,6 +12,8 @@
 #include <variant>
 #include <stack>
 
+#define LE_RUN(start, end) run(start, end)
+
 namespace le
 {
 	class VirtualMachine
@@ -356,6 +358,18 @@ namespace le
 #undef LE_NEXT_INSTRUCTION
 #undef LE_JUMP
 
+		auto run(ProgramCounter pc, ProgramCounter end) -> void
+		{
+			while (_pc != end)
+			{
+				evaluate(*_pc);
+			}
+		}
+
+		auto run_debug(ProgramCounter pc, ProgramCounter end) -> void
+		{
+
+		}
 	public:
 		VirtualMachine()
 		{
@@ -379,10 +393,7 @@ namespace le
 				storage().store(argc++, arg);
 			}
 
-			while (_pc != end)
-			{
-				evaluate(*_pc);
-			}
+			LE_RUN(_pc, end);
 
 			auto return_val = _null_val;
 			if (not stack().empty())
@@ -406,22 +417,8 @@ namespace le
 			{
 				auto end = _current_code->code.cend();
 				open_begin_scope(end);
-				while(_pc != end)
-				{
-					//std::cout << std::format("Current: {}\n",to_string(_pc->op));
-					
-					evaluate(*_pc);
-				}
-
-#if(LE_TURN_ON_DEBUG_PRINTS)
-				auto& stack_ = stack();
-				auto count = 0ull;
-				while(not stack_.empty())
-				{
-					auto obj = pop();
-					LE_DEBUG_PRINT("{}: {}\n", count++, obj->make_string());
-				}
-#endif
+				
+				LE_RUN(_pc, end);
 
 				if (stack().empty())
 				{
@@ -443,3 +440,4 @@ namespace le
 	};
 }
 
+#undef LE_RUN
