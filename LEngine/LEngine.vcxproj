@@ -131,6 +131,7 @@
   <ItemGroup>
     <ClCompile Include="Boolean.cpp" />
     <ClCompile Include="ByteCode.cpp" />
+    <ClCompile Include="Class.cpp" />
     <ClCompile Include="Function.cpp" />
     <ClCompile Include="getters.cpp" />
     <ClCompile Include="GlobalState.cpp" />

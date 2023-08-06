@@ -54,6 +54,9 @@
     <ClCompile Include="getters.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Class.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lexer.h">
@@ -177,7 +180,7 @@
       <Filter>Header Files\builtin</Filter>
     </ClInclude>
     <ClInclude Include="Class.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\builtin</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
