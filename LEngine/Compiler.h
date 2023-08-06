@@ -6,6 +6,7 @@
 #include "VarMap.h"
 #include "GlobalState.h"
 #include "ReservedFunctions.h"
+#include "Class.h"
 
 #include <unordered_map>
 
@@ -125,6 +126,8 @@ namespace le
 			return _vars.get(name);
 		}
 
+		auto is_compiling_class() const -> bool { return not _context.namespace_name.empty(); }
+
 		std::stack<BlockStatement*> _loop_blocks{};
 		struct EscapeReason
 		{
@@ -169,6 +172,28 @@ namespace le
 			/* Generator */
 			switch (statement->type)
 			{
+			case SType::ClassDeclaration:
+			{
+				/*
+				* Classes are currently compiled a bit messy.
+				* Currently, the class gets compiled as a function with a this object and MakeMember opcodes to assign the members
+				* Then when the class is called it will return the this object that now has all members set
+				*/
+				auto& class_stmt = as<ClassDeclaration>(statement);
+				
+				auto compiler = ImplCompiler(_context, _depth + 1ull);
+				auto old_namespace = _context.namespace_name;
+				_context.namespace_name = class_stmt.name;
+				
+				compiler.add_local("this");
+				auto res = compiler.compile(class_stmt.members, *_code_obj, true /* Push this object to TOS so it will be returned as if a function */);
+				
+				emit(Instruction(OpCode::PushGlobal, store_function(res.first, 0, String(class_stmt.name))));
+				emit(Instruction(OpCode::StoreGlobal, register_global(class_stmt.name)));
+				
+				_context.namespace_name = old_namespace;
+				break;
+			}
 			case SType::ImportStatement:
 			{
 				auto& import_statement = as<ImportStatement>(statement);
@@ -236,6 +261,9 @@ namespace le
 				auto& function_decl = as<FunctionDeclaration>(statement);
 				auto compiler = ImplCompiler(_context, _depth + 1ull);
 				
+				if (is_compiling_class())
+					compiler.add_local("this");
+
 				for (auto& arg : function_decl.args)
 					compiler.add_local(arg);
 
@@ -244,7 +272,13 @@ namespace le
 
 				if (not is_lambda)
 				{
-					if (in_global_namespace())
+					if (is_compiling_class())
+					{
+						emit(Instruction(OpCode::PushGlobal, store_string(function_decl.name)));
+						emit(Instruction(OpCode::Load, get("this")));
+						emit(Instruction(OpCode::MakeMember));
+					}
+					else if (in_global_namespace())
 					{
 						emit(Instruction(OpCode::StoreGlobal, register_global(function_decl.name)));
 					}
@@ -366,7 +400,6 @@ namespace le
 				auto& target = assignment_expr.target;
 				auto& rhs = assignment_expr.right;
 
-
 				if (target->type == SType::AccessorExpression || target->type == SType::MemberExpression)
 				{
 					auto& access_expr = as<AccessorExpression>(target.get());
@@ -382,6 +415,7 @@ namespace le
 					generate(rhs.get());
 					if (statement->type == SType::AssignmentExpression)
 						emit(Instruction(OpCode::DupTos));
+										
 					if (is_global(identifier.name))
 					{
 						emit(Instruction(OpCode::StoreGlobal, get_global(identifier.name)));
@@ -427,7 +461,17 @@ namespace le
 				auto& assignment = as<VarAssignment>(statement);
 				auto index = store(assignment.target);
 				generate(assignment.right.get());
-				emit(Instruction(OpCode::Store, index));
+
+				if (is_compiling_class())
+				{
+					emit(Instruction(OpCode::PushGlobal, store_string(assignment.target)));
+					emit(Instruction(OpCode::Load, get("this")));
+					emit(Instruction(OpCode::MakeMember));
+				}
+				else
+				{
+					emit(Instruction(OpCode::Store, index));
+				}
 				break;
 			}
 			case SType::IdentifierExpression:
@@ -523,15 +567,30 @@ namespace le
 			return compile(ast.body, code_object);
 		}
 
-		auto compile(std::vector<PStatement>& ast, Code& code_object) 
+		/*
+		* @param ast: The ast to emit bytecode for
+		* @param code_object: The code object holding instructions and global storage for the virtual machine
+		* @param in_class_namespace: True if and only if compiling in the namespace of the class declaration
+		*/
+		auto compile(std::vector<PStatement>& ast, Code& code_object, bool in_class_namespace = false) 
 			-> Result
 		{
 			_code_obj = &code_object;
+
+			if (is_compiling_class())
+			{
+				emit(Instruction(OpCode::PushEmptyClass));
+				emit(Instruction(OpCode::Store, get("this")));
+			}
 
 			for (auto& statement : ast)
 			{
 				generate(statement.get());
 			}
+
+			if (in_class_namespace and is_compiling_class())
+				emit(Instruction(OpCode::Load, get("this")));
+
 			emit(Instruction(OpCode::Halt));
 			
 			return std::make_pair(std::move(_code), std::move(_vars));
