@@ -61,7 +61,7 @@ namespace le
 		*/
 		auto parse_member_expr() -> PExpression
 		{
-			auto target = parse_primary_expr();
+			auto target = parse_access_expr();
 			while (_lexer->current().type == Token::Type::Dot)
 			{
 				_lexer->advance(); /* Skip dot */
@@ -74,7 +74,7 @@ namespace le
 
 		auto parse_access_expr() -> PExpression
 		{
-			auto target = parse_member_expr();
+			auto target = parse_call_expr();
 
 			while (
 				_lexer->current().type == Token::Type::OpenSquareBracket
@@ -100,7 +100,7 @@ namespace le
 
 		auto parse_call_expr() -> PExpression
 		{ /* '(list[2])(50,50)' can be a valid call expr, hence why our target is a primary expr */
-			auto target = parse_access_expr();
+			auto target = parse_primary_expr();
 
 			/* While loop because we want chaining aka 'get_func("add")(3, 4)' */
 			while (_lexer->current().type == Token::Type::OpenParen)
@@ -122,7 +122,7 @@ namespace le
 
 		auto parse_multiplicative_expr() -> PExpression
 		{
-			auto left = parse_call_expr();
+			auto left = parse_member_expr();
 
 			while (
 				left and
@@ -131,7 +131,7 @@ namespace le
 				)
 			{
 				auto op = _lexer->eat();
-				auto right = parse_access_expr();
+				auto right = parse_member_expr();
 				left = make_binary_operation(left, right, op);
 			}
 
