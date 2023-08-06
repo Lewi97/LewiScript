@@ -43,7 +43,7 @@ namespace le
 			MemberExpression,
 			ArrayExpression,
 			FunctionDeclarationExpression, /* Expr so we can assign it to variables */
-			MemberFunctionDeclaration, 
+			MemberFunctionDeclaration, /* Not used atm */
 			CallExpression,
 			AssignmentExpression, /* a := 1 */
 			ReturnExpression
