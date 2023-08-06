@@ -89,6 +89,16 @@ namespace le
             .value_or(nullptr);
     }
 
+    template<typename _Debugger>
+    inline auto run_with_debug_vm(std::string_view source, std::string_view fname) -> LeObject
+    {
+        return
+            parse(source, fname)
+            .and_then(compile)
+            .and_then(evaluate_with<DebugVirtualMachine<_Debugger>, Code>)
+            .value_or(nullptr);
+    }
+
     inline auto print_bytecode(std::string_view source, std::string_view fname) -> void
     {
         auto code = 

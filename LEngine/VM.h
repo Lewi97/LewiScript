@@ -32,7 +32,6 @@ namespace le
 				return data.at(index);
 			}
 		};
-
 	protected:
 		using ProgramCounter = decltype(Code::code)::const_iterator;
 		using Stack = std::vector<LeObject>;
@@ -354,7 +353,7 @@ namespace le
 #undef LE_NEXT_INSTRUCTION
 #undef LE_JUMP
 
-		auto run(ProgramCounter pc, ProgramCounter end) -> void
+		virtual auto _run(ProgramCounter pc, ProgramCounter end) -> void
 		{
 			while (_pc != end)
 			{
@@ -384,7 +383,7 @@ namespace le
 				storage().store(argc++, arg);
 			}
 
-			run(_pc, end);
+			_run(_pc, end);
 
 			auto return_val = _null_val;
 			if (not stack().empty())
@@ -409,7 +408,7 @@ namespace le
 				auto end = _current_code->code.cend();
 				open_begin_scope(end);
 				
-				run(_pc, end);
+				_run(_pc, end);
 
 				if (stack().empty())
 				{
@@ -439,7 +438,7 @@ namespace le
 	protected:
 		Debugger _debugger{};
 
-		auto run(ProgramCounter pc, ProgramCounter end) -> void
+		auto _run(ProgramCounter pc, ProgramCounter end) -> void override
 		{
 			while (_pc != end)
 			{
@@ -448,11 +447,8 @@ namespace le
 			}
 		}
 	public:
-		DebugVirtualMachine(Debugger debugger)
-			: _debugger(debugger)
-		{
-			_null_val = global::null;
-		}
+		using VirtualMachine::VirtualMachine;
+		using VirtualMachine::run;
 	};
 
 	constexpr auto size__virtualmachine = sizeof(VirtualMachine);
