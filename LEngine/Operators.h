@@ -82,6 +82,11 @@ namespace le
 		case op_t::OperatorEq:
 		case op_t::OperatorNEq:
 			return precedences::equality;
+
+		case op_t::Dot:
+		case op_t::OpenParen:
+		case op_t::OpenSquareBracket:
+			return precedences::access;
 		}
 		return -1;
 	}
