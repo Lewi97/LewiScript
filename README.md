@@ -14,6 +14,7 @@ var array = [number, string, lambda]
 var range = Range(0, 2, 1)
 var iterator = Iterator(range)
 var member_function = array.size
+class EmptyClass: end
 import "some.dll" as module
 ```
 
