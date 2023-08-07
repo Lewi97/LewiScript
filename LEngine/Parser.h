@@ -99,7 +99,7 @@ namespace le
 		}
 
 		auto parse_call_expr() -> PExpression
-		{ /* '(list[2])(50,50)' can be a valid call expr, hence why our target is a primary expr */
+		{ 
 			auto target = parse_primary_expr();
 
 			/* While loop because we want chaining aka 'get_func("add")(3, 4)' */
@@ -120,9 +120,72 @@ namespace le
 			return target;
 		}
 
+		/*
+		* data[1] // accessor expressions
+		* class.member // member expressions
+		* function() // call expressions
+		*/
+		auto parse_accessor_group_expr(PExpression target = nullptr) -> PExpression
+		{
+			if (not target)
+				target = parse_primary_expr();
+
+			switch(_lexer->current().type)
+			{
+			case Token::Type::OpenParen:
+			{
+				auto call_expr = std::make_unique<CallExpression>();
+				call_expr->target = std::move(target);
+				/* Make sure it isnt a function with no args */
+				if (/* Skip open paren */_lexer->advance().type != Token::Type::CloseParen)
+				{
+					call_expr->args = parse_comma_list();
+				}
+
+				_lexer->advance(); /* Skip close paren */
+				/* Check if there are any other equal precedence operators */
+				target = parse_accessor_group_expr(std::move(call_expr));
+				break;
+			}
+
+			case Token::Type::Dot:
+			{
+				while (_lexer->current().type == Token::Type::Dot)
+				{
+					_lexer->advance(); /* Skip dot */
+					expect(Token::Type::Identifier);
+					target = make_member_expression(target, _lexer->eat() /* Skip identifier */);
+				}
+
+				target = parse_accessor_group_expr(std::move(target));
+				break;
+			}
+
+			case Token::Type::OpenSquareBracket:
+			{
+				_lexer->advance(); /* Skip open square bracket */
+				auto query = parse_assignment_expr();
+				target = make_accessor_expression(target, query);
+				if (_lexer->current().type == Token::Type::CloseSquareBracket)
+				{
+					_lexer->advance(); /* Skip close square bracket */
+				}
+				else
+				{
+					throw(ferr::unexpected_token(Token::Type::CloseSquareBracket, _lexer->current()));
+				}
+				target = parse_accessor_group_expr(std::move(target));
+				break;
+			}
+			}
+
+			return target;
+		}
+
 		auto parse_multiplicative_expr() -> PExpression
 		{
-			auto left = parse_member_expr();
+			//auto left = parse_member_expr();
+			auto left = parse_accessor_group_expr();
 
 			while (
 				left and
