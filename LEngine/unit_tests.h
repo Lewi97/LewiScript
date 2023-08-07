@@ -204,6 +204,12 @@ a
 )";
 		LE_UNIT_TEST_END();
 
+		LE_UNIT_TEST_BEGIN(access_call, "50")
+			R"(
+	[fn(n): n + 50 end][0](0)
+)";
+		LE_UNIT_TEST_END();
+
 
 	static inline auto _unit_tests = std::vector<void(*)()>
 	{
@@ -221,6 +227,7 @@ a
 		LE_REGISTER_UNIT_TEST(fibonacci_test)
 		LE_REGISTER_UNIT_TEST(array_member_functions)
 		LE_REGISTER_UNIT_TEST(class_creation_member_call)
+		LE_REGISTER_UNIT_TEST(access_call)
 		//LE_REGISTER_UNIT_TEST(static_var_test)
 	};
 	
