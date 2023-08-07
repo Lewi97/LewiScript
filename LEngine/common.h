@@ -25,11 +25,12 @@ namespace le
 	namespace precedences
 	{
 		enum {
-			assignment = 1,
-			additive,
+			assignment = 1, 
+			additive, 
 			multiplicative,
 			relational,
 			equality,
+			access,
 		};
 	}
 }
