@@ -189,6 +189,22 @@ a
 )";
 		LE_UNIT_TEST_END();
 
+		LE_UNIT_TEST_BEGIN(class_creation_member_call, "50")
+			R"(
+	class Class:
+		var value = 0
+		
+		fn func(n):
+			this.value = this.value + n
+			return this.value
+		end
+	end
+
+	Class().func(50)
+)";
+		LE_UNIT_TEST_END();
+
+
 	static inline auto _unit_tests = std::vector<void(*)()>
 	{
 		LE_REGISTER_UNIT_TEST(variable_assignment)
@@ -204,6 +220,7 @@ a
 		LE_REGISTER_UNIT_TEST(nested_while_break_test)
 		LE_REGISTER_UNIT_TEST(fibonacci_test)
 		LE_REGISTER_UNIT_TEST(array_member_functions)
+		LE_REGISTER_UNIT_TEST(class_creation_member_call)
 		//LE_REGISTER_UNIT_TEST(static_var_test)
 	};
 	
