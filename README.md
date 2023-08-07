@@ -14,6 +14,7 @@ var array = [number, string, lambda]
 var range = Range(0, 2, 1)
 var iterator = Iterator(range)
 var member_function = array.size
+class EmptyClass: end
 import "some.dll" as module
 ```
 
@@ -30,6 +31,23 @@ io.print("Print: ", 5)
 In C++ the ``print`` function is implemented as follows:
 ```cpp
 extern "C" auto print(std::span<LeObject> args, MemoryManager& mem) -> LeObject
+```
+
+# Classes
+Currently there is no support for inheritance (some would applaud me for this) or constructors. But fear not, they will come!
+```
+class Number:
+  var value = 0
+  print(this.value) # When a class is assigned, the body of the class will be executed like a function body.
+
+  fn add(n): # this is implicitly added
+    this.value = this.value + n
+  end # end scope of add
+end # end scope of function declaration
+
+var my_number = Number() # A class is just a function with an implicit this object that all members get assigned to.
+my_number.add(5)
+print(my_number.value)
 ```
 
 # Loops
