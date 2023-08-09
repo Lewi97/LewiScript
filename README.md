@@ -43,7 +43,7 @@ class Number:
   fn add(n): # this is implicitly added
     this.value = this.value + n
   end # end scope of add
-end # end scope of function declaration
+end # end scope of class declaration
 
 var my_number = Number() # A class is just a function with an implicit this object that all members get assigned to.
 my_number.add(5)
