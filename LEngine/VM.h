@@ -174,13 +174,19 @@ namespace le
 			}
 			case OpCode::Call:
 			{
-				auto args_count = _function_args.size();
-			
-				reverse_pop_into_end_of(_function_args, instr.operand.uinteger);
-				auto args = std::span(_function_args.begin() + args_count, _function_args.end());
-				auto ret_val = pop()->call(args, *this);
+				auto args_count = instr.operand.uinteger;// _function_args.size();
+				
+				auto& s = stack();
+				auto args_begin = s.end() - args_count;
+				auto args = std::span(args_begin, s.end());
+				
+				auto expected_index_callable = (s.size() - 1 /* Compensate for 0 index */) - args_count;
+				auto ret_val = s.at(expected_index_callable)->call(args, *this);
+				
+				/* Cleanup args from stack */
+				s.erase(args_begin - 1 /* Include callable */, s.end());
+				
 				push(ret_val);
-				_function_args.erase(_function_args.begin() + args_count, _function_args.end());
 
 				LE_NEXT_INSTRUCTION;
 			}
