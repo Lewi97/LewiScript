@@ -2,7 +2,7 @@
 The hardest part about making a scripting language is coming up with a clever name and desperately trying not to name it a single letter. Yes the name is still up for change.
 
 # Why
-I was wondering if it would be hard to make a scripting language that natively integrates C++. Of course i could use Lua or Python's ``ctypes`` but i wanted to try my own hand at it. And boy has that hand been burned a lot already.
+I was wondering if it would be hard to make a scripting language that natively integrates C++. Of course i could use Lua or Python's ``ctypes`` but i wanted to try my own hand at it.
 
 # Native types
 ```
@@ -43,7 +43,7 @@ class Number:
   fn add(n): # this is implicitly added
     this.value = this.value + n
   end # end scope of add
-end # end scope of function declaration
+end # end scope of class declaration
 
 var my_number = Number() # A class is just a function with an implicit this object that all members get assigned to.
 my_number.add(5)
